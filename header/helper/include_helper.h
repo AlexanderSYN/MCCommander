@@ -9,5 +9,8 @@
 #include <print>
 #include <functional>
 #include <string>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 #endif //INCLUDE_H

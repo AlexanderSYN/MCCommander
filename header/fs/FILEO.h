@@ -10,7 +10,9 @@
 #include "include_fs.h"
 
 namespace FILEO {
-    void read_txt(fs::path path_to_file_txt);
+    void set_path_in_cd(std::string path_by_user,
+        std::string OPath, fs::path path);
+    void read_file(const fs::path& path_f);
 
 }
 
