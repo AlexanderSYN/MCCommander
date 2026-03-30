@@ -6,8 +6,11 @@
 
 #include "../../header/fs/FILEO.h"
 
+#include <chrono>
+
 #include "../../header/helper/helper.h"
 #include "../../header/helper/path_ff.h"
+#include "../../header/helper/Hfs/HFILEO.h"
 
 //======================
 // command -> cd (path)
@@ -56,9 +59,13 @@ void FILEO::set_path_in_cd(std::string path_by_user,
 }
 
 
-//=======================
-// read file
-//=======================
+//=======================================
+// read file -> output of information
+//             from different text files
+//
+// example:
+// cat (file) or just D:\t.txt>> cat
+//=======================================
 void FILEO::read_file(const fs::path& path_f) {
     try {
         std::ifstream file(path_f);
@@ -76,3 +83,53 @@ void FILEO::read_file(const fs::path& path_f) {
         std::cerr << "[ERROR_READ_FILE] [CRITICAL] " << e.what() << std::endl;
     }
 }
+
+//======================================
+// command dir -> command by windows
+//
+// example
+// D:\test>> dir
+//======================================
+void FILEO::command_dir_windows(const fs::path &path) {
+    if (!fs::exists(path)) {
+        std::println(std::cerr, "[ERROR_DIR] Folder is not found!");
+        return;
+    }
+
+    try {
+        std::string command_win = "dir /a \"" + path.string() + "\"";
+        system(command_win.c_str());
+    } catch (const std::exception& e) {
+        std::println("[CRITICAL_ERROR_DIR] {}", e.what());
+    }
+}
+
+//================================================
+// command open -> output all files from folder
+//
+// example
+// D:\>> open
+//================================================
+void FILEO::command_open(const fs::path &path) {
+    try {
+        if (!fs::exists(path)) {
+            std::println(std::cerr, "[ERROR_OPEN] Folder doesn't exists!");
+            return;
+        }
+
+        for (const auto& entry: fs::directory_iterator(path)) {
+            auto ftime = std::filesystem::last_write_time(entry.path());
+            auto sctp = std::chrono::clock_cast<std::chrono::system_clock>(ftime);
+
+            std::println("{} {} {} {} {}",  sctp,
+                entry.file_size(), HFILEO::type(entry),
+                HFILEO::is_hidden(entry),
+                entry.path().filename().string());
+
+        }
+
+    } catch (const std::exception& e) {
+        std::println(std::cerr, "[CRITICIAL_ERROR_OPEN] {}", e.what());
+    }
+}
+

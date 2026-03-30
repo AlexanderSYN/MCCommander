@@ -20,5 +20,9 @@ add_executable(MCComand main.cpp
         cpp/helper/helper.cpp
         header/console/color_console.h
         cpp/console/color_console.cpp
+        header/fs/FILEC.hpp
+        cpp/fs/FILEC.cpp
+        header/helper/Hfs/HFILEO.h
+        cpp/helper/Hfs/HFILEO.cpp
 )
 target_link_libraries(MCComand PRIVATE stdc++exp)

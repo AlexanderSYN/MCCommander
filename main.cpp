@@ -12,6 +12,7 @@
 // fs
 //
 #include "header/fs/FILEO.h"
+#include "header/fs/FILEC.hpp"
 
 //
 // console
@@ -21,6 +22,8 @@
 //
 // helper
 //
+#include <bits/regex_constants.h>
+
 #include "header/console/color_console.h"
 #include "header/helper/path_ff.h"
 
@@ -28,13 +31,16 @@
 namespace fs = std::filesystem;
 
 //
+// C++ 26
 // MCCommander - Mini Console Commander
 //
 
 int main() {
     setlocale(LC_ALL, "ru");
 
+    // history all
     std::vector<std::string> history {};
+    std::vector<std::string> hist_search {}; // history of found files
 
     std::string user_input;
 
@@ -52,7 +58,7 @@ int main() {
     };
 
     commands["color"] = [&](const std::vector<std::string>& args) {
-        if (args.size() < 1) {
+        if (args.empty()) {
             std::println("you need to write like this -> color ... <- (color name)");
             return;
         }
@@ -93,6 +99,47 @@ int main() {
         }
     };
 
+    commands["history"] = [&](const std::vector<std::string>& args) {
+        if (args.size() > 1) {
+
+            if (args[1] == "search" || args[1] == "-s" || args[1] == "--search")
+                if (!hist_search.empty())
+                    for (int i = 1; i < hist_search.size(); i++)
+                        std::println("{}) {}", i, hist_search[i]);
+                else
+                    std::println("[HINT] history search empty");
+
+            else if (args[1] == "save" || args[1] == "-sv" || args[1] == "--save") {
+                if (args.size() < 4) {
+                    std::println("[HINT] you can to specify the path to"
+                                 " the txt file to save the console histor, example:"
+                                 "hist save name.txt -h or -h_s path");
+                    std::print("maybe create a text file and record the"
+                               " history in the current path? <y/n>: ");
+                    char choice;
+                    std::cin >> choice;
+                    if (std::tolower(choice) == 'y')
+                        FILEC::create_file_and_record(path_ff::get_path(), "history.txt", history);
+                }
+                else {
+                    if (args[3] == "hist" or args[3] == "history"
+                        || args[3] == "-h" || args[3] == "--history")
+                        FILEC::create_file_and_record(args[4], args[2], history);
+
+                    else if (args[3] == "hist_srh" or args[3] == "history_search"
+                        || args[3] == "-h-s" || args[3] == "--history_search")
+                        FILEC::create_file_and_record(args[4], args[2], hist_search);
+                }
+            }
+
+        } else
+            for (int i = 1; i < history.size(); i++)
+                std::println("{}) {}", i, history[i]);
+
+    };
+    commands["hist"] = commands["history"];
+
+
     commands["clear"] = [&](const std::vector<std::string>& args) {
         #ifdef _WIN32 // for windows
                 system("cls");
@@ -131,6 +178,10 @@ int main() {
         std::println("{}", path_ff::get_OPath());
     };
 
+    commands["open"] = [&](const std::vector<std::string>& args) {
+        FILEO::command_open(path_ff::get_path());
+    };
+
 
 
     while (isRun) {
@@ -141,6 +192,7 @@ int main() {
                 std::print("$ ");
 
             std::getline(std::cin, user_input);
+            history.push_back(user_input);
 
             std::vector<std::string> args;
             std::istringstream iss(user_input);

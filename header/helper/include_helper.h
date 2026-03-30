@@ -10,6 +10,7 @@
 #include <functional>
 #include <string>
 #include <filesystem>
+#include <windows.h>
 
 namespace fs = std::filesystem;
 
