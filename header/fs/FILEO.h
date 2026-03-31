@@ -7,7 +7,7 @@
 #ifndef FILEO_H
 #define FILEO_H
 
-#include "include_fs.h"
+#include "include_fs.hpp"
 
 namespace FILEO {
     void set_path_in_cd(std::string path_by_user,

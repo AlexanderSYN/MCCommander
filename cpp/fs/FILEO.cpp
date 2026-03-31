@@ -10,7 +10,7 @@
 
 #include "../../header/helper/helper.h"
 #include "../../header/helper/path_ff.h"
-#include "../../header/helper/Hfs/HFILEO.h"
+#include "../../header/helper/Hfs/HFILEF.h"
 
 //======================
 // command -> cd (path)
@@ -121,10 +121,17 @@ void FILEO::command_open(const fs::path &path) {
             auto ftime = std::filesystem::last_write_time(entry.path());
             auto sctp = std::chrono::clock_cast<std::chrono::system_clock>(ftime);
 
-            std::println("{} {} {} {} {}",  sctp,
-                entry.file_size(), HFILEO::type(entry),
-                HFILEO::is_hidden(entry),
-                entry.path().filename().string());
+            if (!HFILEF::is_system(entry.path()) && fs::is_regular_file(entry.path())) {
+                std::println("{:%H:%M:%S} {} {} {} {}",  sctp,
+                    HFILEF::get_size_file(entry.path()), HFILEF::type(entry),
+                    HFILEF::is_hidden(entry),
+                    entry.path().filename().string());
+            } else {
+                std::println("{:%H:%M:%S} {} {} {}", sctp,
+                    HFILEF::type(entry),
+                    HFILEF::is_hidden(entry),
+                    entry.path().filename().string());
+            }
 
         }
 
@@ -132,4 +139,7 @@ void FILEO::command_open(const fs::path &path) {
         std::println(std::cerr, "[CRITICIAL_ERROR_OPEN] {}", e.what());
     }
 }
+
+
+
 
