@@ -7,6 +7,7 @@
 #include <complex>
 #include <unordered_map>
 #include <functional>
+#include <windows.h>
 
 //
 // fs
@@ -18,13 +19,12 @@
 // console
 //
 #include "header/console/cmd.h"
+#include "header/console/color_console.h"
 
 //
 // helper
 //
 #include <bits/regex_constants.h>
-
-#include "header/console/color_console.h"
 #include "header/helper/path_ff.h"
 
 
@@ -36,7 +36,17 @@ namespace fs = std::filesystem;
 //
 
 int main() {
-    setlocale(LC_ALL, "ru");
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+
+    // hello
+#ifdef _WIN32 // for windows
+    std::println("Hello Windows");
+#elif __APPLE__
+    std::println("Hello MAC-OS");
+#else
+    std::println("Hello LINUX");
+#endif
 
     // history all
     std::vector<std::string> history {};
@@ -197,6 +207,12 @@ int main() {
     };
     commands["dir"] = [&](const std::vector<std::string>&) {
         FILEO::command_dir_windows(path_ff::get_path());
+    };
+    commands["ls"] = [&](const std::vector<std::string>& args) {
+        if (args.size() <= 1)
+            FILEO::command_list(path_ff::get_path());
+        else
+            FILEO::command_list(path_ff::get_path(), args[1]);
     };
 
 

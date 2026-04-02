@@ -9,6 +9,10 @@
 
 #include "include_fs.hpp"
 
+//=====================
+// FILEO - File Open
+//=====================
+
 namespace FILEO {
     void set_path_in_cd(std::string path_by_user,
         std::string OPath, fs::path path);
@@ -17,7 +21,7 @@ namespace FILEO {
     void command_dir_windows(const fs::path& path);
     void command_open(const fs::path& path);
     void command_list(const fs::path& path_f);
-    void command_list(const fs::path& path_f, const std::string& param);
+    void command_list(const fs::path& path_f, std::string param);
 
 }
 

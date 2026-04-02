@@ -11,6 +11,7 @@
 #include <fstream>
 #include <string_view>
 #include <vector>
+#include <windows.h>
 
 namespace fs = std::filesystem;
 
