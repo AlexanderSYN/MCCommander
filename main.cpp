@@ -13,7 +13,7 @@
 // fs
 //
 #include "header/fs/FILEO.h"
-#include "header/fs/FILEC.hpp"
+#include "header/fs/FILEDC.hpp"
 
 //
 // console
@@ -25,6 +25,8 @@
 // helper
 //
 #include <bits/regex_constants.h>
+
+#include "header/helper/helper.h"
 #include "header/helper/path_ff.h"
 
 
@@ -129,16 +131,16 @@ int main() {
                     char choice;
                     std::cin >> choice;
                     if (std::tolower(choice) == 'y')
-                        FILEC::create_file_and_record(path_ff::get_path(), "history.txt", history);
+                        FILEDC::create_file_and_record(path_ff::get_path(), "history.txt", history);
                 }
                 else {
                     if (args[3] == "hist" or args[3] == "history"
                         || args[3] == "-h" || args[3] == "--history")
-                        FILEC::create_file_and_record(args[4], args[2], history);
+                        FILEDC::create_file_and_record(args[4], args[2], history);
 
                     else if (args[3] == "hist_srh" or args[3] == "history_search"
                         || args[3] == "-h-s" || args[3] == "--history_search")
-                        FILEC::create_file_and_record(args[4], args[2], hist_search);
+                        FILEDC::create_file_and_record(args[4], args[2], hist_search);
                 }
             }
 
@@ -176,31 +178,38 @@ int main() {
     // work with files / folders
     //============================
     commands["cd"] = [&](const std::vector<std::string>& args) {
-        if (args.size() <= 1) {
+        if (args.size() <= 1)
             std::println("{}", path_ff::get_OPath());
-            return;
-        }
+
         else if (args.size() == 2)
             FILEO::set_path_in_cd(args[1], path_ff::get_OPath(),
                 path_ff::get_path());
+
         else {
-            std::string path_with_spaces;
-            for (int i = 1; i <= args.size() - 1; i++) {
-                if (i != args.size() - 1)
-                    path_with_spaces += args[i] + " ";
-                else
-                    path_with_spaces += args[i];
-            }
-
-            std::println("{}", path_with_spaces);
-
-            FILEO::set_path_in_cd(path_with_spaces, path_ff::get_OPath(),
+            FILEO::set_path_in_cd(
+                helper::connect_path_with_spaces_str(args),
+                path_ff::get_OPath(),
                 path_ff::get_path());
         }
     };
     commands["pwd"] = [&](const std::vector<std::string>&) {
         std::println("{}", path_ff::get_OPath());
     };
+
+    commands["explorer"] = [&](const std::vector<std::string>& args) {
+        if (args.size() <= 1) {
+            FILEO::show_in_explorer(path_ff::get_path());
+            return;
+        }
+
+        if (args.size() > 2)
+            FILEO::show_in_explorer(
+                helper::connect_path_with_spaces(args)
+            );
+
+        FILEO::show_in_explorer(args[1]);
+    };
+    commands["exp"] = commands["explorer"];
 
     commands["open"] = [&](const std::vector<std::string>& args) {
         FILEO::command_open(path_ff::get_path());
@@ -211,11 +220,27 @@ int main() {
     commands["ls"] = [&](const std::vector<std::string>& args) {
         if (args.size() <= 1)
             FILEO::command_list(path_ff::get_path());
-        else
+
+        else if (args.size() == 2)
             FILEO::command_list(path_ff::get_path(), args[1]);
+
+        else {
+            if (args[1] == "--path" || args[1] == "-p") {
+                FILEO::command_list(helper::connect_path_with_spaces_str(args, 2));
+             }
+        }
+    };
+    //========================
+    // create file or folder
+    //========================
+    commands["touch"] = [&](const std::vector<std::string>& args) {
+      FILEDC::command_touch(path_ff::get_path(), args);
+    };
+    commands["mkdir"] = [&](const std::vector<std::string>& args) {
+        FILEDC::command_mkdir(path_ff::get_path(), args);
     };
 
-
+    std::println("for help type help!");
 
     while (isRun) {
         try {

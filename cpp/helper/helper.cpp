@@ -17,3 +17,32 @@ void helper::replace_chars(std::string &text,
         text.replace(pos, 2, new_chars);
 }
 
+///
+/// @param args the vector in main.cpp
+/// @param drop the number of items to skip (default = 1)
+/// @return path full path
+fs::path helper::connect_path_with_spaces(
+        const std::vector<std::string>& args,
+        int drop) {
+
+    std::string full_path;
+    for (auto p : args | std::views::drop(drop))
+        full_path += p + " ";
+
+    return fs::path(full_path);
+}
+///
+/// @param args the vector in main.cpp
+/// @param drop the number of items to skip (default = 1)
+/// @return string full path
+std::string helper::connect_path_with_spaces_str(
+        const std::vector<std::string>& args,
+        int drop) {
+
+    std::string full_path;
+    for (auto p : args | std::views::drop(drop))
+        full_path += p + " ";
+
+    return full_path;
+}
+

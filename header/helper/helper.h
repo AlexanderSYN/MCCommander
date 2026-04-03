@@ -4,12 +4,20 @@
 
 #ifndef HELPER_H
 #define HELPER_H
-#include <string>
+
+#include "include_helper.h"
 
 namespace helper {
     void replace_chars(std::string &text,
                        const std::string &old_chars,
                        const std::string &new_chars);
+
+    fs::path connect_path_with_spaces(
+                    const std::vector<std::string>& args,
+                    int drop = 1);
+    std::string connect_path_with_spaces_str(
+                    const std::vector<std::string>& args,
+                    int drop = 1);
 }
 
 #endif //HELPER_H

@@ -6,9 +6,6 @@
 
 #include "../../header/fs/FILEO.h"
 
-#include <algorithm>
-#include <chrono>
-
 #include "../../header/helper/helper.h"
 #include "../../header/helper/path_ff.h"
 #include "../../header/helper/Hfs/HFILEF.h"
@@ -36,6 +33,13 @@ void FILEO::set_path_in_cd(std::string path_by_user,
         }
         return;
     }
+    if (path_from_user[0] == '.' && path_from_user[1] == '.') {
+        fs::path current_path = path;
+        current_path /= path_from_user;
+        current_path = current_path.lexically_normal();
+        path_ff::set_path(current_path.string());
+        return;
+    }
 
     if (!fs::exists(path_from_user)) {
         // check if you have written a folder or file that is
@@ -45,7 +49,7 @@ void FILEO::set_path_in_cd(std::string path_by_user,
             return;
         }
 
-        std::cerr << "[ERROR_CD] Folder or File not found!" << std::endl;
+        std::println(std::cerr, "[ERROR_CD] Folder or File not found!");
         return;
     }
 
@@ -97,12 +101,14 @@ void FILEO::command_dir_windows(const fs::path &path) {
         return;
     }
 
+#ifdef _WIN32
     try {
         std::string command_win = "dir /a \"" + path.string() + "\"";
         system(command_win.c_str());
     } catch (const std::exception& e) {
         std::println("[CRITICAL_ERROR_DIR] {}", e.what());
     }
+#endif
 }
 
 //================================================
@@ -245,6 +251,52 @@ void FILEO::command_list(const fs::path &path_f, std::string param) {
     }
 }
 
+//==========================
+// open file in explorer
+//
+// example
+// D:\ >> explorer or exp
+//==========================
+void FILEO::show_in_explorer(const fs::path& path) {
+    try {
+        if (!fs::exists(path)) {
+            std::println("Path does not exist: {}", path.string());
+            return;
+        }
+
+        std::string command;
+
+#ifdef _WIN32
+        command = "explorer /select,\"" + path.string() + "\"";
+#elif __APPLE__
+        if (fs::is_directory(path)) {
+            command = "open \"" + path.string() "\"";
+        } else {
+            command = "open -R \"" + path.string() + "\"";
+        }
+#elseif __linux__
+        if (fs::is_directory(path)) {
+            command = "xdg-open \"" + path.string() + "\"";
+        } else {
+            command = "xdg-open \"" + path.parent_path().string() + "\"";
+        }
+#else
+        std::cout << "[ERROR] Unsupported OS" << std::endl;
+        return;
+#endif
+
+        int result = std::system(command.c_str());
+        bool success = (result == 1);
+
+        if (success)
+            std::cout << "[SUCCESS OPEN]" << std::endl;
+        else
+            std::cout << "[FAILED OPEN]" << std::endl;
+
+    } catch (const std::exception& e) {
+        std::println("[CRITICAL_ERROR_SHOW_IN_EXPLORER] {}", e.what());
+    }
+}
 
 
 

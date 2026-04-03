@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 26)
 
 add_executable(MCComand main.cpp
         header/fs/FILEO.h
-        header/fs/include_fs.hpp
 
         header/helper/check_command.hpp
         header/helper/include_helper.h
@@ -20,8 +19,8 @@ add_executable(MCComand main.cpp
         cpp/helper/helper.cpp
         header/console/color_console.h
         cpp/console/color_console.cpp
-        header/fs/FILEC.hpp
-        cpp/fs/FILEC.cpp
+        header/fs/FILEDC.hpp
+        cpp/fs/FILEDC.cpp
         header/helper/Hfs/HFILEF.h
         cpp/helper/Hfs/HFILEF.cpp
 )

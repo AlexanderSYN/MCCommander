@@ -7,7 +7,7 @@
 #ifndef FILEO_H
 #define FILEO_H
 
-#include "include_fs.hpp"
+#include "include_fs.h"
 
 //=====================
 // FILEO - File Open
@@ -23,6 +23,7 @@ namespace FILEO {
     void command_list(const fs::path& path_f);
     void command_list(const fs::path& path_f, std::string param);
 
+    void show_in_explorer(const fs::path& path);
 }
 
 #endif //FILEO_H

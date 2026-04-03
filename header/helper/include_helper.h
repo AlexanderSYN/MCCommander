@@ -9,8 +9,11 @@
 #include <print>
 #include <functional>
 #include <string>
+#include <ranges>
 #include <filesystem>
 #include <windows.h>
+#include <algorithm>
+#include <chrono>
 
 namespace fs = std::filesystem;
 
