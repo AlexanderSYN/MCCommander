@@ -46,7 +46,7 @@ namespace fs = std::filesystem;
 
 //
 // C++ 26
-// MCCommander - Mini Console Commander
+// SMC - Simple Mini Commander
 //
 
 int main() {
