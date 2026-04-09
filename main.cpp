@@ -210,14 +210,20 @@ int main() {
     commands["echo"] = [&](const std::vector<std::string>& args) {
         text::full_functional_echo(args, path_ff::get_path());
     };
+    //==================================================
     // write many lines
-    // echoln (path / nothing)
+    // example
+    // >> echoln (path)
+    // if the default path is specified via cd,
+    // then you don't have to write anything.
+    //==================================================
     commands["echoln"] = [&](const std::vector<std::string>& args) {
         fs::path path_f = text::resolve_file_path_for_echolnrw(args,
                                             path_ff::get_path());
         text::write_many_lines(path_f);
     };
-    // rewrite text
+    // rewrite (text)
+    // like echoln only rewrite
     commands["echolnrw"] = [&](const std::vector<std::string>& args) {
         fs::path path_f = text::resolve_file_path_for_echolnrw(args,
                                         path_ff::get_path());

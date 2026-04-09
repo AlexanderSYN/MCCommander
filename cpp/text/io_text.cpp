@@ -210,11 +210,15 @@ fs::path text::resolve_file_path_for_echolnrw(const std::vector<std::string>& ar
     return helper::connect_path(default_path, args[1]);
 }
 
-// исправить ошибки с получением пути!!!!
+///
+/// Executes a full-featured `echo` command.
+/// @param args         Vector of args passed from main.cpp
+/// @param default_path Path obtained from path_ff::get_path()
 void text::full_functional_echo(const std::vector<std::string>& args,
-                                 fs::path default_path) {
+                                fs::path default_path) {
 
-    fs::path tmp_path = helper::connect_path(path_ff::get_path(), default_path);
+    fs::path tmp_path = helper::connect_path(path_ff::get_path(),
+                                            default_path);
 
     if (!fs::exists(default_path) && !fs::is_regular_file(default_path)) {
         if (fs::exists(tmp_path)) {
