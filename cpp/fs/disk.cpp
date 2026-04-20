@@ -8,7 +8,7 @@
 /// output free disk space
 /// @param path_f path for get free disk space
 /// or just disk
-void disk::free_in_disk(const fs::path& path_f) {
+void disk::output_free_in_disk(const fs::path& path_f) {
     try {
         std::println("Disk space info for: {}\n"
                      "Total capacity: {}\n"
@@ -23,9 +23,9 @@ void disk::free_in_disk(const fs::path& path_f) {
 }
 
 ///
-/// occuiped space in folders
+/// output occuiped space in folders
 /// @param path_f
-void disk::ocuppied_in_folders(const fs::path& path_f) {
+void disk::output_ocuppied_in_folders(const fs::path& path_f) {
     try {
         std::println("Path: {}\n"
                      "Occupied space: {}",

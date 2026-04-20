@@ -8,8 +8,8 @@
 #include "include_fs.h"
 
 namespace disk {
-    void free_in_disk(const fs::path& path_f);
-    void ocuppied_in_folders(const fs::path& path_f);
+    void output_free_in_disk(const fs::path& path_f);
+    void output_ocuppied_in_folders(const fs::path& path_f);
 }
 
 #endif //DISK_H
