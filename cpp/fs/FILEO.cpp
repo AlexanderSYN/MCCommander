@@ -103,21 +103,26 @@ void FILEO::command_open(const fs::path &path) {
         }
         std::println("Disk: {}", path.string().at(0));
         for (const auto& entry: fs::directory_iterator(path)) {
-            auto ftime = std::filesystem::last_write_time(entry.path());
-            auto sctp = std::chrono::clock_cast<std::chrono::system_clock>(ftime);
+            try {
+                auto ftime = std::filesystem::last_write_time(entry.path());
+                auto sctp = std::chrono::clock_cast<std::chrono::system_clock>(ftime);
 
-            if (!HFILEF::is_system(entry.path()) && fs::is_regular_file(entry.path())) {
-                std::println("{:%d.%m.%Y %H:%M} {} {} \t {} {}",  sctp,
-                    HFILEF::get_size_file(entry.path()), HFILEF::type(entry),
-                    HFILEF::is_hidden(entry),
-                    entry.path().filename().string());
-                count_files++;
-            } else {
-                std::println("{:%d.%m.%Y %H:%M} \t {} \t {} {}", sctp,
-                    HFILEF::type(entry),
-                    HFILEF::is_hidden(entry),
-                    entry.path().filename().string());
-                count_folder++;
+                if (!HFILEF::is_system(entry.path()) && fs::is_regular_file(entry.path())) {
+                    std::println("{:%d.%m.%Y %H:%M} {} {} \t {} {}",  sctp,
+                        HFILEF::get_size_file(entry.path()), HFILEF::type(entry),
+                        HFILEF::is_hidden(entry),
+                        entry.path().filename().string());
+                    count_files++;
+                } else {
+                    std::println("{:%d.%m.%Y %H:%M} \t {} \t {} {}", sctp,
+                        HFILEF::type(entry),
+                        HFILEF::is_hidden(entry),
+                        entry.path().filename().string());
+                    count_folder++;
+                }
+            } catch (const std::exception &e) {
+                std::println(std::cerr, "[CRITICIAL_ERROR_OPEN] {}", e.what());
+                continue;
             }
 
         }

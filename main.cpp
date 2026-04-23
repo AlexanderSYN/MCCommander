@@ -324,9 +324,18 @@ int main() {
     // create file or folder
     //========================
     commands["touch"] = [&](const std::vector<std::string>& args) {
+      if (args.size() < 1) {
+          std::println(std::cerr, "[HINT] You need to write so: touch (name file).(extension)");
+          return;
+      }
       FILEDC::command_touch(path_ff::get_path(), args);
     };
     commands["mkdir"] = [&](const std::vector<std::string>& args) {
+        if (args.size() < 1) {
+            std::println(std::cerr, "[HINT] You need to write so: touch (name folder)");
+            return;
+        }
+
         FILEDC::command_mkdir(path_ff::get_path(), args);
     };
     //========================
@@ -335,9 +344,6 @@ int main() {
     commands["delete"] = [&](const std::vector<std::string>& args) {
         if (args.size() == 2)
             FILEDEL::del(helper::connect_path(path_ff::get_path(), args[1]));
-        else if (args.size() >= 3) {
-
-        }
         else
             FILEDEL::del(path_ff::get_path());
     };

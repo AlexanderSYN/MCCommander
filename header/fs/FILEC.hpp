@@ -37,8 +37,9 @@ namespace FILEC {
             std::println("[SYSTEM] file created and written successfully!");
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear buffer
             return;
-        } else
-            std::cerr << "" << std::endl;
+        }
+
+        std::cerr << "" << std::endl;
         std::println(std::cerr, "[SYSTEM][ERROR] Could not create file at {}!", file_path);
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear buffer
     }
