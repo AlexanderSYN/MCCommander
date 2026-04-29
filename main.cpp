@@ -38,6 +38,7 @@
 //======================
 // helper
 //======================
+#include "header/fs/copy.h"
 #include "header/helper/helper.h"
 #include "header/helper/path_ff.h"
 
@@ -91,6 +92,12 @@ int main() {
         std::println("{}", ColorConsole::choice_color(args[1]));
     };
     commands["col"] = commands["color"];
+
+    commands["info"] = [&](const std::vector<std::string>&) {
+        std::println("___Simple Mini Commander___");
+        std::println("___Author:  AlexanderSYN___");
+        std::println("______Beta Test V0.01______");
+    };
 
     //================
     //time and date
@@ -284,6 +291,27 @@ int main() {
             }
         }
     };
+
+    commands["copy"] = [&](const std::vector<std::string>& args) {
+        if (args.size() < 4) {
+            std::println("[HINT] incorrectly command, you need to write so: copy / cp (parametr) (source) (target)!");
+            return;
+        }
+
+        std::string parameter = args[1];
+        fs::path source = args[2];
+        fs::path target = args[3];
+
+        if (parameter == "-f" ||  parameter == "-fo" || parameter == "--file"
+            || parameter == "--file-overwrite")
+            copy::files(source, target, path_ff::get_path(), parameter);
+        else if (parameter == "-d" || parameter == "-do"
+            || parameter == "-directory" || parameter == "--directory-overwrite")
+            copy::folders(source, target, path_ff::get_path(), parameter);
+        else
+            std::println("[HINT] incorrectly command, you need to write so: copy / cp (parametr) (source) (target)!");
+    };
+    commands["cp"] = commands["copy"];
 
     commands["open"] = [&](const std::vector<std::string>& args) {
         FILEO::command_open(path_ff::get_path());
