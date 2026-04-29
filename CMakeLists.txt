@@ -38,5 +38,7 @@ add_executable(MCComand main.cpp
         cpp/fs/disk.cpp
         cpp/fs/space.cpp
         header/fs/space.h
+        header/fs/copy.h
+        cpp/fs/copy.cpp
 )
 target_link_libraries(MCComand PRIVATE stdc++exp)
