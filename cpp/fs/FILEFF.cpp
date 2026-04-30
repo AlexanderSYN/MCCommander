@@ -148,7 +148,7 @@ void FILEFF::find(std::string search_term, std::string parametr,
         }
 
         // Handle results
-        if (!paths_founded_ff.empty())
+        if (!paths_founded_ff.empty()) {
             std::println("\nFound {} item(s)", paths_founded_ff.size());
             std::println("Enter number to open (1-{}) or -1 to exit",
                     paths_founded_ff.size());
@@ -161,8 +161,8 @@ void FILEFF::find(std::string search_term, std::string parametr,
             if (choice >= 1 && choice < paths_founded_ff.size()) {
                 explr::show_in_explorer(paths_founded_ff, choice);
             }
-        else
-            std::println("No files or folders found matching '{}'",
+        }
+        else std::println("No files or folders found matching '{}'",
                         search_term);
 
     } catch (const std::exception &e) {

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <print>
 #include <filesystem>
+#include <system_error>
 #include <fstream>
 #include <string_view>
 #include <vector>

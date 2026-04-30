@@ -39,7 +39,12 @@ void copy::files(fs::path from, fs::path to, fs::path path_ff, std::string param
                     from_path_for_copy.string(), to_path_for_copy.string());
           }
 
-     } catch (const std::exception& e) {
+     } catch (const fs::filesystem_error& e) {
+          if (e.code() == std::errc::file_exists) {
+               std::println(std::cerr, "[CRITICAL_ERROR_COPY_FILES] the file {} already exists!\n"
+                                       "you can to overwrite in parameter -> -of to overwrite file", from.string());
+               return;
+          }
           std::println(std::cerr, "[CRITICAL_ERROR_COPY_FILES] {}", e.what());
      }
 }
@@ -75,8 +80,13 @@ void copy::folders(fs::path from, fs::path to, fs::path path_ff, std::string par
 
 
 
-     } catch (const std::exception& e) {
-          std::println(std::cerr, "[CRITICAL_ERROR_COPY_FILES] {}", e.what());
+     } catch (const fs::filesystem_error& e) {
+          if (e.code() == std::errc::file_exists) {
+               std::println(std::cerr, "[CRITICAL_ERROR_COPY_FOLDERS] the folder {} already exists!\n"
+                                       "you can to overwrite in parameter -> -of to overwrite file", from.string());
+               return;
+          }
+          std::println(std::cerr, "[CRITICAL_ERROR_COPY_FILDERS] {}", e.what());
      }
 }
 
