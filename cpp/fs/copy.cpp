@@ -90,6 +90,9 @@ void copy::folders(fs::path from, fs::path to, fs::path path_ff, std::string par
      }
 }
 
+//=======================
+// copying without log
+//=======================
 void copy::copy_only_for_func_move(fs::path from, fs::path to, fs::path path_ff) {
        fs::path from_path_for_copy = HFILEF::get_fetch_full_path(from, path_ff);
        fs::path to_path_for_copy = HFILEF::get_fetch_full_path(to, path_ff);
