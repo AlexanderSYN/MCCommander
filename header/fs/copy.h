@@ -10,6 +10,8 @@
 namespace copy {
     void files(fs::path from, fs::path to, fs::path path_ff, std::string parameter);
     void folders(fs::path from, fs::path to, fs::path path_ff, std::string parameter);
+
+    void copy_only_for_func_move(fs::path from, fs::path to, fs::path path_ff);
 }
 
 #endif //COPY_H

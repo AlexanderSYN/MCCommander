@@ -122,3 +122,17 @@ std::string HFILEF::get_size_file(const fs::path &path) {
 }
 
 
+// check how you write
+// if so
+// D:/txt >> cp txt
+// and if in folder txt exists txt then get D:/txt/txt
+// if full path then get from
+///
+/// @param path default path
+/// @param path_ff the file specified in the path_ff file
+/// @return if path is not exists then path_ff + path
+fs::path HFILEF::get_fetch_full_path(fs::path path, fs::path path_ff) {
+    return fs::exists(path) ? path : path_ff / path;
+}
+
+

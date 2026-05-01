@@ -1,8 +1,8 @@
 //
 // Created by AlexanderSYN on 13.04.2026.
 //
-#include "../../header/fs/disk.h"
-#include "../../header/fs/space.h"
+#include "../../header/fs/DISK.h"
+#include "../../header/fs/SPACE.h"
 
 ///
 /// output free disk space

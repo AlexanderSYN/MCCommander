@@ -13,11 +13,12 @@
 // fs
 //======================
 #include "header/fs/FILEO.h"
-#include "header/fs/FILEDC.hpp"
+#include "header/fs/FILEC.hpp"
+#include "header/fs/DIRMAKE.h"
 #include "header/fs/FILEDEL.h"
 #include "header/fs/FILEFF.h"
-#include "header/fs/explorer.h"
-#include "header/fs/disk.h"
+#include "header/fs/EXPLORER.h"
+#include "header/fs/DISK.h"
 
 //======================
 // text
@@ -38,7 +39,10 @@
 //======================
 // helper
 //======================
-#include "header/fs/copy.h"
+#include "header/fs/COPY.h"
+#include "header/fs/DIRMAKE.h"
+#include "header/fs/DIRMAKE.h"
+#include "header/fs/MOVE.h"
 #include "header/helper/helper.h"
 #include "header/helper/path_ff.h"
 
@@ -162,16 +166,16 @@ int main() {
                     char choice;
                     std::cin >> choice;
                     if (std::tolower(choice) == 'y')
-                        FILEDC::create_file_and_record(path_ff::get_path(), "history.txt", history);
+                        FILEC::create_file_and_record(path_ff::get_path(), "history.txt", history);
                 }
                 else {
                     if (args[3] == "hist" or args[3] == "history"
                         || args[3] == "-h" || args[3] == "--history")
-                        FILEDC::create_file_and_record(args[4], args[2], history);
+                        FILEC::create_file_and_record(args[4], args[2], history);
 
                     else if (args[3] == "hist_srh" or args[3] == "history_search"
                         || args[3] == "-h-s" || args[3] == "--history_search")
-                        FILEDC::create_file_and_record(args[4], args[2], hist_search);
+                        FILEC::create_file_and_record(args[4], args[2], hist_search);
                 }
             }
 
@@ -313,6 +317,18 @@ int main() {
     };
     commands["cp"] = commands["copy"];
 
+    commands["move"] = [&](const std::vector<std::string>& args) {
+        if (args.size() < 3) {
+            std::println("[HINT] incorrectly command, you need to write so: move (source) (target)!");
+              return;
+        }
+
+        std::string source = args[1];
+        std::string target = args[2];
+
+        MOVE::moveFF(source, target, path_ff::get_path());
+    };
+
     commands["open"] = [&](const std::vector<std::string>& args) {
         FILEO::command_open(path_ff::get_path());
     };
@@ -356,7 +372,7 @@ int main() {
           std::println(std::cerr, "[HINT] You need to write so: touch (name file).(extension)");
           return;
       }
-      FILEDC::command_touch(path_ff::get_path(), args);
+      FILEC::command_touch(path_ff::get_path(), args);
     };
     commands["mkdir"] = [&](const std::vector<std::string>& args) {
         if (args.size() < 1) {
@@ -364,7 +380,7 @@ int main() {
             return;
         }
 
-        FILEDC::command_mkdir(path_ff::get_path(), args);
+        DIRMAKE::command_mkdir(path_ff::get_path(), args);
     };
     //========================
     // delete file or folder

@@ -21,6 +21,8 @@ namespace helper {
 
     fs::path connect_path(const fs::path &first_path,
                     const fs::path &second_path);
+
+    void clear_input_buffer();
 }
 
 #endif //HELPER_H

@@ -3,7 +3,7 @@
 //
 
 #include "../../header/fs/FILEFF.h"
-#include "../../header/fs/explorer.h"
+#include "../../header/fs/EXPLORER.h"
 
 void FILEFF::find(std::string search_term, std::string parametr,
                   const fs::path &path_f) {

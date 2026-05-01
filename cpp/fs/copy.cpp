@@ -2,9 +2,9 @@
 // Created by Alexander on 29.04.2026.
 //
 
-#include "../../header/fs/copy.h"
+#include "../../header/fs/COPY.h"
 
-fs::path get_full_path(fs::path path, fs::path path_ff);
+#include "../../header/helper/Helperfs/HFILEF.h"
 
 ///
 /// @param from copy file from path
@@ -13,8 +13,8 @@ fs::path get_full_path(fs::path path, fs::path path_ff);
 /// @param parameter for copy parameter
 void copy::files(fs::path from, fs::path to, fs::path path_ff, std::string parameter) {
      try {
-          fs::path from_path_for_copy = get_full_path(from, path_ff);
-          fs::path to_path_for_copy = get_full_path(to, path_ff);
+          fs::path from_path_for_copy = HFILEF::get_fetch_full_path(from, path_ff);
+          fs::path to_path_for_copy = HFILEF::get_fetch_full_path(to, path_ff);
 
 
           if (fs::is_directory(to_path_for_copy)) {
@@ -51,8 +51,8 @@ void copy::files(fs::path from, fs::path to, fs::path path_ff, std::string param
 
 void copy::folders(fs::path from, fs::path to, fs::path path_ff, std::string parameter) {
      try {
-          fs::path from_path_for_copy = get_full_path(from, path_ff);
-          fs::path to_path_for_copy = get_full_path(to, path_ff);
+          fs::path from_path_for_copy = HFILEF::get_fetch_full_path(from, path_ff);
+          fs::path to_path_for_copy = HFILEF::get_fetch_full_path(to, path_ff);
 
           if (fs::is_directory(to_path_for_copy)) {
                to_path_for_copy /= from_path_for_copy.filename();
@@ -86,15 +86,25 @@ void copy::folders(fs::path from, fs::path to, fs::path path_ff, std::string par
                                        "you can to overwrite in parameter -> -of to overwrite file", from.string());
                return;
           }
-          std::println(std::cerr, "[CRITICAL_ERROR_COPY_FILDERS] {}", e.what());
+          std::println(std::cerr, "[CRITICAL_ERROR_COPY_FOLDERS] {}", e.what());
      }
 }
 
-// check how you write
-// if so
-// D:/txt >> cp txt
-// and if in folder txt exists txt then get D:/txt/txt
-// if full path then get from
-fs::path get_full_path(fs::path path, fs::path path_ff) {
-     return fs::exists(path) ? path : path_ff / path;
+void copy::copy_only_for_func_move(fs::path from, fs::path to, fs::path path_ff) {
+       fs::path from_path_for_copy = HFILEF::get_fetch_full_path(from, path_ff);
+       fs::path to_path_for_copy = HFILEF::get_fetch_full_path(to, path_ff);
+
+       if (fs::is_directory(to_path_for_copy)) {
+            to_path_for_copy /= from_path_for_copy.filename();
+       }
+
+       if (fs::is_symlink(from_path_for_copy)) {
+            std::println(std::cerr, "[WARNING] cannot overwrite symlink!");
+            fs::copy_symlink(from_path_for_copy, to_path_for_copy);
+            return;
+       }
+
+       fs::copy(from_path_for_copy, to_path_for_copy,
+                      fs::copy_options::overwrite_existing |
+                      fs::copy_options::recursive);
 }

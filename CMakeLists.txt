@@ -5,12 +5,14 @@ set(CMAKE_CXX_STANDARD 26)
 
 add_executable(MCComand main.cpp
         header/fs/FILEO.h
+        header/fs/FILEC.hpp
 
         header/helper/check_command.hpp
         header/helper/include_helper.h
         header/helper/path_ff.h
 
         cpp/fs/FILEO.cpp
+        cpp/fs/FILEC.cpp
 
         cpp/helper/path_ff.cpp
         header/console/cmd.h
@@ -19,8 +21,8 @@ add_executable(MCComand main.cpp
         cpp/helper/helper.cpp
         header/console/color_console.h
         cpp/console/color_console.cpp
-        header/fs/FILEDC.hpp
-        cpp/fs/FILEDC.cpp
+        header/fs/DIRMAKE.h
+        cpp/fs/DIRMAKE.cpp
         header/helper/Helperfs/HFILEF.h
         cpp/helper/Hfs/HFILEF.cpp
         header/fs/FILEDel.h
@@ -40,5 +42,7 @@ add_executable(MCComand main.cpp
         header/fs/space.h
         header/fs/copy.h
         cpp/fs/copy.cpp
+        header/fs/MOVE.h
+        cpp/fs/MOVE.cpp
 )
 target_link_libraries(MCComand PRIVATE stdc++exp)

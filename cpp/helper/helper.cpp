@@ -63,4 +63,7 @@ fs::path helper::connect_path(const fs::path &first_path, const fs::path &second
     return first_path / second_path;
 }
 
+void helper::clear_input_buffer() {
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear buffer
+}
 

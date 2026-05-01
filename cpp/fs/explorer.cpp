@@ -2,7 +2,7 @@
 // Created by AlexanderSYN on 06.04.2026.
 //
 
-#include "../../header/fs/explorer.h"
+#include "../../header/fs/EXPLORER.h"
 
 ///
 /// open file in explorer

@@ -33,6 +33,8 @@ namespace HFILEF {
     std::string is_hidden(const fs::path& path_f);
     bool is_system(const fs::path& path);
     std::string get_size_file(const fs::path& path);
+
+    fs::path get_fetch_full_path(fs::path path, fs::path path_ff);
 }
 
 #endif //HFILE_H
