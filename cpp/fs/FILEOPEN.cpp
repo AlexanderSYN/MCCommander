@@ -10,6 +10,11 @@
 #include "../../header/helper/path_ff.h"
 #include "../../header/helper/Helperfs/HFILEF.h"
 
+void print_file_entry(std::chrono::system_clock::time_point sctp,
+                        const fs::directory_entry& entry);
+void print_directory_entry(std::chrono::system_clock::time_point sctp,
+                        const fs::directory_entry& entry);
+
 //======================
 // command -> cd (path)
 //======================
@@ -66,7 +71,9 @@ void FILEO::set_path_in_cd(std::string path_by_user,
 //======================================
 // command dir -> command by windows
 //======================================
-void FILEO::command_dir_windows(const fs::path &path) {
+void FILEO::command_dir_windows() {
+    const fs::path path = path_ff::get_path();
+
     if (!fs::exists(path)) {
         std::println(std::cerr, "[ERROR_DIR] Folder is not found!");
         return;
@@ -85,51 +92,57 @@ void FILEO::command_dir_windows(const fs::path &path) {
 //================================================
 // command open -> output all files from folder
 //================================================
-void FILEO::command_open(const fs::path &path) {
+void FILEO::command_open() {
+    const fs::path path = path_ff::get_path();
+
     try {
-        int count_files = 0, count_folder = 0;
+        int count_files = 0;
+        int count_folders = 0;
+
         if (!fs::exists(path)) {
-            std::println(std::cerr, "[ERROR_OPEN] Folder doesn't exists!");
+            std::println(std::cerr, "[ERROR_OPEN] Folder doesn't exist!");
             return;
         }
         std::println("Disk: {}", path.string().at(0));
+
         for (const auto& entry: fs::directory_iterator(path)) {
             try {
                 auto ftime = std::filesystem::last_write_time(entry.path());
                 auto sctp = std::chrono::clock_cast<std::chrono::system_clock>(ftime);
 
                 // example output: 12.04.2026 22:05 123mb [FILE/DIR] name file / folder
-                if (!HFILEF::is_system(entry.path()) && fs::is_regular_file(entry.path())) {
-                    output_for_command_open(entry, sctp, false);
-                    count_files++;
-                }
-                else {
+               if (fs::is_regular_file(entry.path())) {
+                   output_for_command_open(entry, sctp, false);
+                   ++count_files;
+               }
+                if (fs::is_directory(entry.path())) {
                     output_for_command_open(entry, sctp, true);
-                    count_folder++;
+                    ++count_folders;
                 }
             } catch (const std::exception &e) {
-                std::println(std::cerr, "[CRITICIAL_ERROR_OPEN] {}", e.what());
+                std::println(std::cerr, "[CRITICAL_ERROR_OPEN] {}", e.what());
             }
 
         }
 
-        std::println("\t\t File(s): {}\n \t\t Dir(s): {}", count_files, count_folder);
+        std::println("\t\t File(s): {}\n \t\t Dir(s): {}", count_files, count_folders);
 
     } catch (const std::exception& e) {
-        std::println(std::cerr, "[CRITICIAL_ERROR_OPEN] {}", e.what());
+        std::println(std::cerr, "[CRITICAL_ERROR_OPEN] {}", e.what());
     }
 }
-void FILEO::output_for_command_open(const auto& entry, auto sctp, boolean isSystemAndThisFile) {
-    if (!isSystemAndThisFile)
-        std::println("{:%d.%m.%Y %H:%M} {} {} \t {} {}",  sctp,
-                        HFILEF::get_size_file(entry.path()), HFILEF::type(entry),
-                        HFILEF::is_hidden(entry),
-                        entry.path().filename().string());
+
+
+
+void FILEO::output_for_command_open(
+    const fs::directory_entry& entry,
+    const std::chrono::system_clock::time_point& sctp,
+    bool isDirectory) {
+
+    if (!isDirectory)
+        print_file_entry(sctp, entry);
     else
-        std::println("{:%d.%m.%Y %H:%M} \t {} \t {} {}", sctp,
-                        HFILEF::type(entry),
-                        HFILEF::is_hidden(entry),
-                        entry.path().filename().string());
+        print_directory_entry(sctp, entry);
 }
 
 //============================
@@ -139,7 +152,9 @@ void FILEO::output_for_command_open(const auto& entry, auto sctp, boolean isSyst
 // example:
 // D:\ >> ls
 //============================
-void FILEO::command_list(const fs::path &path_f) {
+void FILEO::command_list() {
+    const fs::path path_f = path_ff::get_path();
+
      try {
          if (!fs::exists(path_f) && fs::is_directory(path_f)) {
              std::println(std::cerr, "[ERR] Folder not found or "
@@ -151,7 +166,7 @@ void FILEO::command_list(const fs::path &path_f) {
              std::cout << entry.path().filename().string() << std::endl;
 
      } catch (const std::exception& e) {
-         std::println(std::cerr, "[CRITICIAL_ERROR_LS] {}", e.what());
+         std::println(std::cerr, "[CRITICAL_ERROR_LS] {}", e.what());
      }
 }
 
@@ -162,7 +177,9 @@ void FILEO::command_list(const fs::path &path_f) {
 // example:
 // D:\ >> ls --d
 //==============================
-void FILEO::command_list(const fs::path &path_f, std::string param) {
+void FILEO::command_list(std::string param) {
+    const fs::path path_f = path_ff::get_path();
+
     try {
         if (!fs::exists(path_f) && std::filesystem::is_directory(path_f)) {
             std::println(std::cerr, "[ERR_LS_PARAMETERS] "
@@ -170,7 +187,7 @@ void FILEO::command_list(const fs::path &path_f, std::string param) {
         }
 
         if (param.empty()) {
-            std::println("You need to write a parametr!");
+            std::println("You need to write a parameter!");
             return;
         }
 
@@ -237,3 +254,24 @@ void FILEO::command_list(const fs::path &path_f, std::string param) {
 }
 
 
+void print_file_entry(
+    std::chrono::system_clock::time_point sctp,
+    const fs::directory_entry& entry) {
+
+    std::println("{:%d.%m.%Y %H:%M} {} {} \t {} {}",
+                        sctp,
+                        HFILEF::get_size_file(entry.path()),
+                        HFILEF::type(entry),
+                        HFILEF::is_hidden(entry),
+                        entry.path().filename().string());
+}
+
+void print_directory_entry(std::chrono::system_clock::time_point sctp,
+    const fs::directory_entry &entry) {
+
+    std::println("{:%d.%m.%Y %H:%M} \t {} \t {} {}",
+                        sctp,
+                        HFILEF::type(entry),
+                        HFILEF::is_hidden(entry),
+                        entry.path().filename().string());
+}

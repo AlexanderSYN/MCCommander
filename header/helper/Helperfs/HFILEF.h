@@ -11,12 +11,6 @@
 // Helper Files / Folders
 //
 namespace HFILEF {
-
-    const long KB = 1024;
-    const long MB = 1024 * 2;
-    const long GB = 1024 * 3;
-    const long TB = 1024 * 4;
-
     //==========================================================
     // The list of system directories to skip (can be expanded)
     //==========================================================
@@ -40,7 +34,7 @@ namespace HFILEF {
     bool is_system(const fs::path& path);
     std::string get_size_file(const fs::path& path);
 
-    fs::path get_fetch_full_path(fs::path path, fs::path path_ff);
+    fs::path get_fetch_full_path(const fs::path& path, const fs::path& path_ff);
 }
 
 #endif //HFILE_H

@@ -44,5 +44,7 @@ add_executable(SimpleMiniCommander main.cpp
         cpp/fs/copy.cpp
         header/fs/MOVE.h
         cpp/fs/MOVE.cpp
+        header/helper/helper_echo.h
+        cpp/helper/helper_echo.cpp
 )
 target_link_libraries(SimpleMiniCommander PRIVATE stdc++exp)

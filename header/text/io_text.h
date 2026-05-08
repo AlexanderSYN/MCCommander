@@ -25,7 +25,7 @@ namespace text {
                                 const std::vector<std::string>& args,
                                 const fs::path& default_path);
 
-    void full_functional_echo( const std::vector<std::string>& args,
+    void echo( const std::vector<std::string>& args,
                                 fs::path default_path);
 }
 

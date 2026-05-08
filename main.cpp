@@ -42,6 +42,7 @@
 #include "header/fs/COPY.h"
 #include "header/fs/MOVE.h"
 #include "header/helper/helper.h"
+#include "header/helper/helper_echo.h"
 #include "header/helper/path_ff.h"
 
 namespace fs = std::filesystem;
@@ -217,7 +218,9 @@ int main() {
 
     // echo (param) (path / text) (text)
     commands["echo"] = [&](const std::vector<std::string>& args) {
-        text::full_functional_echo(args, path_ff::get_path());
+
+
+        text::echo(args, path_ff::get_path());
     };
     //==================================================
     // write many lines
@@ -325,32 +328,41 @@ int main() {
     commands["cp"] = commands["copy"];
 
     commands["move"] = [&](const std::vector<std::string>& args) {
-        if (args.size() < 3) {
+        if (args.size() < 2) {
             std::println("[HINT] incorrectly command, you need to write so: move (source) (target)!");
-              return;
+            return;
         }
+        std::string source ;
+        std::string target ;
 
-        std::string source = args[1];
-        std::string target = args[2];
+        if (args.size() < 3) {
+            source = path_ff::get_path().string();
+            target = args[1];
+        }
+        else {
+            source = args[1];
+            target = args[2];
+        }
 
         MOVE::move_item(source, target);
     };
 
     commands["open"] = [&](const std::vector<std::string>& args) {
-        FILEO::command_open(path_ff::get_path());
+        FILEO::command_open();
     };
     commands["dir"] = [&](const std::vector<std::string>&) {
-        FILEO::command_dir_windows(path_ff::get_path());
+        FILEO::command_dir_windows();
     };
     commands["ls"] = [&](const std::vector<std::string>& args) {
         if (args.size() <= 1)
-            FILEO::command_list(path_ff::get_path());
+            FILEO::command_list();
         else {
-            fs::path tmp_path = helper::connect_path(path_ff::get_path(), args[1]);
+            fs::path tmp_path = helper::connect_path(path_ff::get_path(),
+                args[1]);
             if (fs::exists(tmp_path))
-                FILEO::command_list(tmp_path);
+                FILEO::command_list();
             else
-                FILEO::command_list(helper::connect_path_with_spaces_str(args, 2));
+                FILEO::command_list(args[1]);
         }
     };
 

@@ -4,6 +4,7 @@
 
 #ifndef CHECK_COMMAND_H
 #define CHECK_COMMAND_H
+
 #include "include_helper.h"
 
 namespace helper {

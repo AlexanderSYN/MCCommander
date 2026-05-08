@@ -17,7 +17,7 @@ void FILEFIND::find(std::string search_term, std::string parametr,
             return;
         }
 
-        std::println("If you are tired of waiting, press the 'Alt' key to stop!");
+        std::println("If you are tired of waiting, press the 'Esc' key to stop!");
         std::println("Searching for: '{}' in: {}", search_term, path_f.string());
 
         //===================================================
@@ -30,7 +30,7 @@ void FILEFIND::find(std::string search_term, std::string parametr,
             //========================================
 
             for (const auto &entry: fs::directory_iterator(path_f)) {
-                if (GetAsyncKeyState(VK_RMENU) & 0x8000 || GetAsyncKeyState(VK_LMENU) & 0x8000) {
+                if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
                     std::println("\nSearch stopped by user!");
                     break;
                 }
@@ -60,7 +60,7 @@ void FILEFIND::find(std::string search_term, std::string parametr,
                 std::cout << "Searching only files with extension: " << search_term.substr(2) << std::endl;
                 try {
                     for (const auto &entry: fs::directory_iterator(path_f)) {
-                        if (GetAsyncKeyState(VK_RMENU) & 0x8000 || GetAsyncKeyState(VK_LMENU) & 0x8000) {
+                        if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
                             std::println("\nSearch stopped by user!");
                             break;
                         }
@@ -85,7 +85,8 @@ void FILEFIND::find(std::string search_term, std::string parametr,
                 std::cout << "Searching only files with extension: " << search_term.substr(2) << std::endl;
                 try {
                     for (const auto &entry: fs::directory_iterator(path_f)) {
-                        if (GetAsyncKeyState(VK_RMENU) & 0x8000 || GetAsyncKeyState(VK_LMENU) & 0x8000) {
+                        if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
+
                             std::println("\nSearch stopped by user!");
                             break;
                         }
@@ -121,7 +122,7 @@ void FILEFIND::find(std::string search_term, std::string parametr,
                 std::println("Only folders");
                 for (const auto &entry: fs::directory_iterator(path_f)) {
                     // for stop searching
-                    if (GetAsyncKeyState(VK_RMENU) & 0x8000 || GetAsyncKeyState(VK_LMENU) & 0x800) {
+                    if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
                         std::println("\nSearch stopped by user!");
                         break;
                     }
@@ -196,8 +197,7 @@ void FILEFIND::recurs_search(std::string search_term,
 
     for (; it != end; it.increment(ec)) {
 
-        if (GetAsyncKeyState(VK_RMENU) & 0x8000 ||
-            GetAsyncKeyState(VK_LMENU) & 0x8000) {
+        if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
             std::cout << "\n Search stopped by user!\n";
             break;
         }

@@ -8,12 +8,24 @@
 /// @return converts from bytes to
 ///         the desired unit of measurement
 std::string space::format_bytes(uintmax_t size) {
-    double bytes = static_cast<double>(size);
+    double result;
 
-    if (bytes >= TiB) return std::format("{:.2f} TB", bytes / TiB);
-    if (bytes >= GiB) return std::format("{:.2f} GB", bytes / GiB);
-    if (bytes >= MiB) return std::format("{:.2f} MB", bytes / MiB);
-    if (bytes >= KiB) return std::format("{:.2f} KB", bytes / KiB);
+    if (size >= TiB) {
+        result = static_cast<double>(size) / static_cast<double>(TiB);
+        return std::format("{:.2f} TB", result);
+    }
+    if (size >= GiB) {
+        result = static_cast<double>(size) / static_cast<double>(GiB);
+        return std::format("{:.2f} GB", result);
+    }
+    if (size >= MiB) {
+        result = static_cast<double>(size) / static_cast<double>(MiB);
+        return std::format("{:.2f} MB", result);
+    }
+    if (size >= KiB) {
+        result = static_cast<double>(size) / static_cast<double>(KiB);
+        return std::format("{:.2f} KB", result);
+    }
 
     return std::format("{} B", size);
 }
@@ -64,8 +76,9 @@ std::string space::occupied_dir(const fs::path &path) {
 
                 // We add the size only if it is a regular file
                 // (not a folder or a link)
+
                 std::error_code err_cde;
-                if (fs::is_regular_file(entry)) {
+                if (entry.is_regular_file()) {
                     auto fsize = fs::file_size(entry, err_cde);
                     if (!err_cde) size += fsize;
                 }

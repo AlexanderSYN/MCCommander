@@ -4,15 +4,8 @@
 
 #include "../../../header/helper/Helperfs/HFILEF.h"
 
-///
-/// return the file or folder type
-/// [вернуть тип файла или папки]
-///
-/// example
-/// t.txt -> [FILE]
-///
-/// @param path_f the path to check and find out which type
-/// @return the file or folder type
+#include "../../../header/fs/space.h"
+
 std::string HFILEF::type(const fs::path& path_f) {
     if (fs::is_regular_file(path_f)) return "[FILE]";
     if (fs::is_directory(path_f)) return "[DIR]";
@@ -25,12 +18,7 @@ std::string HFILEF::type(const fs::path& path_f) {
     return "[UNKNOWN]";
 }
 
-///
-/// Cross-platform verification of whether a file or folder is hidden
-/// [Кроссплатформенная проверка того, скрыт ли файл или папка]
-///
-/// @param path_f the path to check and find out if it is hidden or not
-/// @return [HIDDEN] or nothing
+
 std::string HFILEF::is_hidden(const fs::path& path_f) {
 #ifdef _WIN32 // for windows
     DWORD attributes = GetFileAttributesA(path_f.string().c_str());
@@ -47,15 +35,7 @@ std::string HFILEF::is_hidden(const fs::path& path_f) {
 #endif
 }
 
-///
-/// checks vector of secret formats and folders that are
-/// in the OS and if it finds something, then true, otherwise false
-/// [проверяет вектор секретных форматов и папок, которые есть в
-/// операционной системе, и если он что-то находит, то это true,
-/// в противном случае false]
-///
-/// @param path the path to check
-/// @return true - system file/folder and false - not system
+
 bool HFILEF::is_system(const fs::path &path) {
     try {
         std::string path_str = path.string();
@@ -102,18 +82,9 @@ bool HFILEF::is_system(const fs::path &path) {
 
 std::string HFILEF::get_size_file(const fs::path &path) {
     try {
-        auto size_in_byte = fs::file_size(path);
+        uintmax_t size_in_bytes = fs::file_size(path);
 
-        if (size_in_byte < KB)
-            return std::to_string(size_in_byte) + "B";
-        if (size_in_byte < MB)
-            return std::to_string(size_in_byte) + "KB";
-        if (size_in_byte < GB)
-            return std::to_string(size_in_byte) + "MB";
-        if (size_in_byte < TB)
-            return std::to_string(size_in_byte) + "GB";
-
-        return std::to_string(size_in_byte) + "TB";
+        return space::format_bytes(size_in_bytes);
 
     } catch (const std::exception& e) {
         return "ERR";
@@ -121,16 +92,13 @@ std::string HFILEF::get_size_file(const fs::path &path) {
 }
 
 
-// check how you write
-// if so
-// D:/txt >> cp txt
-// and if in folder txt exists txt then get D:/txt/txt
-// if full path then get from
+
 ///
 /// @param path default path
 /// @param path_ff the file specified in the path_ff file
 /// @return if path is not exists then path_ff + path
-fs::path HFILEF::get_fetch_full_path(fs::path path, fs::path path_ff) {
+fs::path HFILEF::get_fetch_full_path(const fs::path& path,
+                                    const fs::path& path_ff) {
     return fs::exists(path) ? path : path_ff / path;
 }
 

@@ -6,6 +6,7 @@
 
 #include "../../header/fs/DIRMAKE.h"
 #include "../../header/helper/helper.h"
+#include "../../header/helper/helper_echo.h"
 
 
 //===============================
@@ -215,9 +216,9 @@ void func_echo(const std::vector<std::string>& args,
                                             default_path);
 
     if (!fs::exists(default_path) && !fs::is_regular_file(default_path)) {
-        if (fs::exists(tmp_path)) {
+        if (fs::exists(tmp_path))
             default_path = tmp_path;
-        }
+
     }
 
     // Minimum: command + parameter + at least one word + optional path
@@ -246,8 +247,13 @@ void func_echo(const std::vector<std::string>& args,
                                last_arg.find('\\') != std::string::npos ||
                                last_arg.find('.') != std::string::npos);
 
-    if (has_path_specified && args.size() > 3) {
-        target_path = helper::connect_path(default_path, last_arg);
+    // echo (param) text >> path
+    if (helper_echo::contains_redirection(args) && args.size() > 3) {
+        if (!fs::exists(helper_echo::get_path_redirection()))
+            target_path = helper::connect_path(default_path, last_arg);
+        else
+            target_path = helper_echo::get_path_redirection();
+
         text_start_index = 2;  // words before the path are the text
     }
 
@@ -269,7 +275,7 @@ void func_echo(const std::vector<std::string>& args,
 /// Executes a full-featured `echo` command.
 /// @param args         Vector of args passed from main.cpp
 /// @param default_path Path obtained from path_ff::get_path()
-void text::full_functional_echo(const std::vector<std::string>& args,
+void text::echo(const std::vector<std::string>& args,
                                 fs::path default_path) {
 
     try {
