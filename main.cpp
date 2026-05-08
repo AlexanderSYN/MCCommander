@@ -249,11 +249,18 @@ int main() {
         if (args.size() <= 1)
             std::println("{}", path_ff::get_OPath());
 
-        else if (args.size() == 2)
+        else if (args.size() == 2) {
             FILEO::set_path_in_cd(args[1], path_ff::get_OPath(),
                 path_ff::get_path());
+        }
 
         else {
+            // if has parametr --path then to ask place path
+            if (args[1] == "-p" || args[1] == "--place") {
+                FILEO::choice_place_path_in_cd(stoi(args[2]));
+                return;
+            }
+
             FILEO::set_path_in_cd(
                 helper::connect_path_with_spaces_str(args),
                 path_ff::get_OPath(),

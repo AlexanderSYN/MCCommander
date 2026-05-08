@@ -68,6 +68,31 @@ void FILEO::set_path_in_cd(std::string path_by_user,
     path_ff::set_path(path_from_user);
 }
 
+void choice_path(int place) {
+    const fs::path path = path_ff::get_path();
+    int count = 0;
+
+    for (const auto entry : fs::directory_iterator(path)) {
+        count++;
+        if (count == place) {
+            path_ff::set_path(entry.path().string());
+            return;
+        }
+    }
+
+    if (count < place) {
+        std::println("[WARNING] Index Out of Bounds!");
+        return;
+    }
+}
+void FILEO::choice_place_path_in_cd(int place) {
+    try {
+        choice_path(place);
+    } catch (const std::exception& e) {
+        std::println(std::cerr, "[CRITICAL_ERROR_CD] {}", e.what());
+    }
+}
+
 //======================================
 // command dir -> command by windows
 //======================================
@@ -154,6 +179,7 @@ void FILEO::output_for_command_open(
 //============================
 void FILEO::command_list() {
     const fs::path path_f = path_ff::get_path();
+    int count = 0;
 
      try {
          if (!fs::exists(path_f) && fs::is_directory(path_f)) {
@@ -162,9 +188,10 @@ void FILEO::command_list() {
              return;
          }
 
-         for (const auto& entry : fs::directory_iterator(path_f))
-             std::cout << entry.path().filename().string() << std::endl;
-
+         for (const auto& entry : fs::directory_iterator(path_f)) {
+             count++;
+             std::println("{}) {}", count, entry.path().filename().string());
+         }
      } catch (const std::exception& e) {
          std::println(std::cerr, "[CRITICAL_ERROR_LS] {}", e.what());
      }
