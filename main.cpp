@@ -369,7 +369,7 @@ int main() {
             if (fs::exists(tmp_path))
                 FILEO::command_list();
             else
-                FILEO::command_list(args[1]);
+                FILEO::command_list_with_parameter(args[1]);
         }
     };
 

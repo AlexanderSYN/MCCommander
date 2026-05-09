@@ -26,7 +26,7 @@ namespace FILEO {
     void command_open();
 
     void command_list();
-    void command_list(std::string param);
+    void command_list_with_parameter(std::string param);
 
 
 }

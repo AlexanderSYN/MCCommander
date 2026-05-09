@@ -23,14 +23,19 @@ std::string HFILEF::is_hidden(const fs::path& path_f) {
 #ifdef _WIN32 // for windows
     DWORD attributes = GetFileAttributesA(path_f.string().c_str());
 
-    if ((attributes & FILE_ATTRIBUTE_HIDDEN) != 0)
+    if (attributes == INVALID_FILE_ATTRIBUTES)
+        return "";
+
+    if (attributes & FILE_ATTRIBUTE_HIDDEN)
         return "[HIDDEN]";
 
     return "";
 
 #else // for MACOS / Linux
     if (path_f.filename().string()[0] == '.')
-        return "[HIDDEN]"
+        return "[HIDDEN]";
+
+    return "";
 
 #endif
 }

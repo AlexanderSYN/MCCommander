@@ -152,7 +152,8 @@ void FILEO::command_open() {
 
         std::println("\t\t File(s): {}\n \t\t Dir(s): {}", count_files, count_folders);
 
-    } catch (const std::exception& e) {
+    }
+    catch (const std::exception& e) {
         std::println(std::cerr, "[CRITICAL_ERROR_OPEN] {}", e.what());
     }
 }
@@ -204,8 +205,11 @@ void FILEO::command_list() {
 // example:
 // D:\ >> ls --d
 //==============================
-void FILEO::command_list(std::string param) {
+void output_filename(const fs::directory_entry& entry, const int& count);
+
+void FILEO::command_list_with_parameter(std::string param) {
     const fs::path path_f = path_ff::get_path();
+    int count = 0;
 
     try {
         if (!fs::exists(path_f) && std::filesystem::is_directory(path_f)) {
@@ -222,6 +226,7 @@ void FILEO::command_list(std::string param) {
         std::vector<std::string> for_sort_ff; // ff - file folder
 
         for (const auto& entry : fs::directory_iterator(path_f)) {
+            count++;
             std::string fdname = entry.path().filename().string(); // fdname - file directory name
             std::transform(fdname.begin(), fdname.end(), fdname.begin(), ::tolower);
 
@@ -233,14 +238,14 @@ void FILEO::command_list(std::string param) {
             if (param == "--f" || param == "--files"
                 || param == "--file") {
                 if (is_regular_file(entry))
-                    std::cout << entry.path().filename().string() << std::endl;
+                    output_filename(entry, count);
 
             }
             // only directory
             if (param == "--d" || param == "--directories"
                 || param == "--directory") {
                 if (entry.is_directory())
-                    std::cout << entry.path().filename().string() << std::endl;
+                    output_filename(entry, count);
 
             }
             // only directory with words
@@ -248,9 +253,7 @@ void FILEO::command_list(std::string param) {
                 if (entry.is_directory()) {
                     if (!param.substr(3).empty())
                         if (fdname.starts_with(param.substr(3)))
-                            std::cout << entry.path().filename().string() << std::endl;
-
-
+                            output_filename(entry, count);
                 }
             }
             // only files with words
@@ -258,12 +261,11 @@ void FILEO::command_list(std::string param) {
                 if (is_regular_file(entry)) {
                     if (!param.substr(3).empty())
                         if (fdname.starts_with(param.substr(3)))
-                            std::cout << entry.path().filename().string() << std::endl;
-
+                            output_filename(entry, count);
                 }
             }
             else if (fdname.starts_with(param.substr(1))) {
-                std::cout << entry.path().filename().string() << std::endl;
+                    output_filename(entry, count);
             }
         }
 
@@ -280,6 +282,9 @@ void FILEO::command_list(std::string param) {
     }
 }
 
+void output_filename(const fs::directory_entry& entry, const int& count) {
+    std::println("{}) {}", count,  entry.path().filename().string());
+}
 
 void print_file_entry(
     std::chrono::system_clock::time_point sctp,
