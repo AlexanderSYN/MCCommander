@@ -218,8 +218,6 @@ int main() {
 
     // echo (param) (path / text) (text)
     commands["echo"] = [&](const std::vector<std::string>& args) {
-
-
         text::echo(args, path_ff::get_path());
     };
     //==================================================
@@ -395,14 +393,14 @@ int main() {
     // create file or folder
     //========================
     commands["touch"] = [&](const std::vector<std::string>& args) {
-      if (args.size() < 1) {
+      if (args.empty()) {
           std::println(std::cerr, "[HINT] You need to write so: touch (name file).(extension)");
           return;
       }
       FILEC::command_touch(path_ff::get_path(), args);
     };
     commands["mkdir"] = [&](const std::vector<std::string>& args) {
-        if (args.size() < 1) {
+        if (args.empty()) {
             std::println(std::cerr, "[HINT] You need to write so: touch (name folder)");
             return;
         }
@@ -421,7 +419,6 @@ int main() {
         }
         else
             FILERMV::remove_multiple(path_ff::get_path(), args);
-
     };
     commands["del"] = commands["delete"];
     commands["remove"] = commands["delete"];
@@ -439,7 +436,6 @@ int main() {
             disk::output_free_in_disk(path_ff::get_path());
         else
             disk::output_free_in_disk(args[1]);
-
     };
     // folder size
     commands["size"] = [&](const std::vector<std::string>& args) {
