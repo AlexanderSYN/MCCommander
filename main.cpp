@@ -97,7 +97,7 @@ int main() {
     commands["info"] = [&](const std::vector<std::string>&) {
         std::println("___Simple Mini Commander___");
         std::println("___Author:  AlexanderSYN___");
-        std::println("______Beta Test V0.02______");
+        std::println("______Beta Test V0.03______");
     };
 
     //================
@@ -323,8 +323,8 @@ int main() {
         }
         else if (args.size() == 4) {
             parameter = args[3];
-            source = args[2];
-            target = args[3];
+            source = args[1];
+            target = args[2];
         }
 
         copy::copy_folder_or_file(source, target, parameter);
@@ -365,7 +365,7 @@ int main() {
             fs::path tmp_path = helper::connect_path(path_ff::get_path(),
                 args[1]);
             if (fs::exists(tmp_path))
-                FILEO::command_list();
+                FILEO::command_list(tmp_path);
             else
                 FILEO::command_list_with_parameter(args[1]);
         }

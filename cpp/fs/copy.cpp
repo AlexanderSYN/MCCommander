@@ -5,13 +5,73 @@
 #include "../../header/fs/COPY.h"
 #include "../../header/helper/Helperfs/HFILEF.h"
 
+void copy_folder_with_overwrite(const fs::path& from, const fs::path& to,
+                         const std::string& parameter);
+void copy_file_with_overwrite(const fs::path& from, const fs::path& to,
+                              const std::string& parameter);
 
+//===========================
+// copying file or folder
+//===========================
+void copy::copy_folder_or_file(const fs::path& source, const fs::path& target,
+     const std::string& parameter) {
+
+     try {
+          if (fs::is_regular_file(source))
+               copy_file(source, target, parameter);
+          else
+               copy_folder(source, target, parameter);
+     }
+     catch (const std::exception& e) {
+          std::println(std::cerr, "[CRITICAL_ERROR_COPY] {}", e.what());
+     }
+}
+
+
+//=======================
+//  Copy Folder / File
+//      global func
+//=======================
+// accepted parameter: overwrite
+void copy::copy_file(const fs::path& from, const fs::path& to,
+     const std::string& parameter) {
+
+     try {
+          copy_file_with_overwrite(from, to, parameter);
+     }
+     catch (const fs::filesystem_error& e) {
+          if (e.code() == std::errc::file_exists) {
+               std::println(std::cerr, "[CRITICAL_ERROR_COPY_FILES] the file {} already exists!\n"
+                                       "you can to overwrite in parameter -> -ovr / --overwrite to overwrite file", from.string());
+               return;
+          }
+          std::println(std::cerr, "[CRITICAL_ERROR_COPY_FILES] {}", e.what());
+     }
+}
+
+
+// accepted parameter: overwrite
+void copy::copy_folder(const fs::path& from, const fs::path& to,
+     const std::string& parameter) {
+
+     try {
+          copy_folder_with_overwrite(from, to, parameter);
+     }
+     catch (const fs::filesystem_error& e) {
+          if (e.code() == std::errc::file_exists) {
+               std::println(std::cerr, "[CRITICAL_ERROR_COPY_FOLDERS] the folder {} already exists!\n"
+                                       "you can to overwrite in parameter -> -ovr / --overwrite to overwrite file", from.string());
+               return;
+          }
+          std::println(std::cerr, "[CRITICAL_ERROR_COPY_FOLDERS] {}", e.what());
+     }
+}
 //=======================
 //  Copy Folder / File
 //      local func
 //=======================
 void copy_file_with_overwrite(const fs::path& from, const fs::path& to,
-                              const std::string parameter) {
+                              const std::string& parameter) {
       const fs::path path_ff = path_ff::get_path();
 
       fs::path source = HFILEF::get_fetch_full_path(from, path_ff);
@@ -31,6 +91,33 @@ void copy_file_with_overwrite(const fs::path& from, const fs::path& to,
           fs::copy(source, target, fs::copy_options::overwrite_existing);
           std::println("[SYSTEM] success overwritten file {} to {}",
                source.string(), target.string());
+     }
+     else if (parameter == "-af" || parameter == "--all-files") {
+          for (const fs::directory_entry& entry : fs::directory_iterator(source)) {
+               if (!entry.is_directory() && entry.is_regular_file()) {
+                    fs::copy(source, entry.path());
+                    std::println("[SYSTEM] success copied all file from {} to {}",
+          source.string(), target.string());
+               }
+          }
+     }
+     else if (parameter == "-ad" || parameter == "--all-directory") {
+          for (const fs::directory_entry& entry : fs::directory_iterator(source)) {
+               if (entry.is_directory()) {
+                    fs::copy(entry.path(), target);
+                    std::println("[SYSTEM] success copied all directory "
+                                 "from {} to {}",source.string(),
+                                 target.string());
+               }
+          }
+     }
+     else if (parameter == "-a" || parameter == "--all") {
+          for (const fs::directory_entry& entry : fs::directory_iterator(source)) {
+               fs::copy(entry.path(), target);
+               std::println("[SYSTEM] success copied all "
+                              "from {} to {}",source.string(),
+                             target.string());
+          }
      }
      else {
           fs::copy(source, target, fs::copy_options::overwrite_existing);
@@ -61,71 +148,39 @@ void copy_folder_with_overwrite(const fs::path& from, const fs::path& to,
           std::println("[SYSTEM] success overwritten folder {} to {}",
                source.string(), target.string());
      }
+     else if (parameter == "-af" || parameter == "--all-files") {
+          for (const fs::directory_entry& entry : fs::directory_iterator(source)) {
+               if (!entry.is_directory() && entry.is_regular_file()) {
+                    fs::copy(source, entry.path());
+                    std::println("[SYSTEM] success copied all file from {} to {}",
+          source.string(), target.string());
+               }
+          }
+     }
+     else if (parameter == "-ad" || parameter == "--all-directory") {
+          for (const fs::directory_entry& entry : fs::directory_iterator(source)) {
+               if (entry.is_directory()) {
+                    fs::copy(entry.path(), target);
+                    std::println("[SYSTEM] success copied all directory "
+                                 "from {} to {}",source.string(),
+                                 target.string());
+               }
+          }
+     }
+     else if (parameter == "-a" || parameter == "--all") {
+          for (const fs::directory_entry& entry : fs::directory_iterator(source)) {
+               fs::copy(entry.path(), target);
+               std::println("[SYSTEM] success copied all "
+                              "from {} to {}",source.string(),
+                             target.string());
+          }
+     }
      else {
           fs::copy(source, target, fs::copy_options::recursive);
           std::println("[SYSTEM] success copied folder {} to {}",
                source.string(), target.string());
      }
 }
-
-//=======================
-//  Copy Folder / File
-//      global func
-//=======================
-// accepted parameter: overwrite
-void copy::copy_file(const fs::path& from, const fs::path& to,
-     const std::string& parameter) {
-
-     try {
-          copy_file_with_overwrite(from, to, parameter);
-
-     }
-     catch (const fs::filesystem_error& e) {
-          if (e.code() == std::errc::file_exists) {
-               std::println(std::cerr, "[CRITICAL_ERROR_COPY_FILES] the file {} already exists!\n"
-                                       "you can to overwrite in parameter -> -ovr / --overwrite to overwrite file", from.string());
-               return;
-          }
-          std::println(std::cerr, "[CRITICAL_ERROR_COPY_FILES] {}", e.what());
-     }
-}
-
-
-// accepted parameter: overwrite
-void copy::copy_folder(const fs::path& from, const fs::path& to,
-     const std::string& parameter) {
-
-     try {
-          copy_folder_with_overwrite(from, to, parameter);
-     }
-     catch (const fs::filesystem_error& e) {
-          if (e.code() == std::errc::file_exists) {
-               std::println(std::cerr, "[CRITICAL_ERROR_COPY_FOLDERS] the folder {} already exists!\n"
-                                       "you can to overwrite in parameter -> -ovr / --overwrite to overwrite file", from.string());
-               return;
-          }
-          std::println(std::cerr, "[CRITICAL_ERROR_COPY_FOLDERS] {}", e.what());
-     }
-}
-
-//===========================
-// copying file or folder
-//===========================
-void copy::copy_folder_or_file(const fs::path& source, const fs::path& target,
-     const std::string& parameter) {
-
-     try {
-          if (fs::is_regular_file(source))
-               copy_file(source, target, parameter);
-          else
-               copy_folder(source, target, parameter);
-     }
-     catch (const std::exception& e) {
-          std::println(std::cerr, "[CRITICAL_ERROR_COPY] {}", e.what());
-     }
-}
-
-
 //=======================
 // copying without log
 //=======================

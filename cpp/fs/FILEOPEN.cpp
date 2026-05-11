@@ -130,7 +130,7 @@ void FILEO::command_open() {
         }
         std::println("Disk: {}", path.string().at(0));
 
-        for (const auto& entry: fs::directory_iterator(path)) {
+        for (const fs::directory_entry& entry: fs::directory_iterator(path)) {
             try {
                 auto ftime = std::filesystem::last_write_time(entry.path());
                 auto sctp = std::chrono::clock_cast<std::chrono::system_clock>(ftime);
@@ -196,6 +196,24 @@ void FILEO::command_list() {
      } catch (const std::exception& e) {
          std::println(std::cerr, "[CRITICAL_ERROR_LS] {}", e.what());
      }
+}
+void FILEO::command_list(const fs::path& path_f) {
+    int count = 0;
+
+    try {
+        if (!fs::exists(path_f) && fs::is_directory(path_f)) {
+            std::println(std::cerr, "[ERR] Folder not found or "
+                                    "change path!");
+            return;
+        }
+
+        for (const auto& entry : fs::directory_iterator(path_f)) {
+            count++;
+            std::println("{}) {}", count, entry.path().filename().string());
+        }
+    } catch (const std::exception& e) {
+        std::println(std::cerr, "[CRITICAL_ERROR_LS] {}", e.what());
+    }
 }
 
 //==============================
