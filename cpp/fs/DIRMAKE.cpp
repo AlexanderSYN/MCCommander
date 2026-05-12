@@ -39,7 +39,6 @@ void DIRMAKE::create_dir(fs::path path, std::string dir) {
             std::println("[SYSTEM] Directory [{}] created successfully!", dir_path.string());
         }
 
-        helper::clear_input_buffer();
     } catch (const std::exception& e) {
         std::println(std::cerr, "[CRITICAL_ERROR_CREATE_FOLDER] {}", e.what());
     }

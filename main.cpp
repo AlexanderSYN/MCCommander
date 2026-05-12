@@ -308,23 +308,12 @@ int main() {
             return;
         }
 
-        std::string parameter;
-        fs::path source, target;
+        std::string parameter = "no";
+        fs::path source = (args.size() == 2) ? path_ff::get_path() : args[1];
+        fs::path target = (args.size() == 2) ? args[1] : args[2];
 
-        if (args.size() == 2) {
-            parameter = "no";
-            source = path_ff::get_path();
-            target = args[1];
-        }
-        else if (args.size() == 3) {
-            parameter = "no";
-            source = args[1];
-            target = args[2];
-        }
-        else if (args.size() == 4) {
+        if (args.size() == 4) {
             parameter = args[3];
-            source = args[1];
-            target = args[2];
         }
 
         copy::copy_folder_or_file(source, target, parameter);
