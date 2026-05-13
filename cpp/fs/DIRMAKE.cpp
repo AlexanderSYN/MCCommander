@@ -50,7 +50,7 @@ void DIRMAKE::command_mkdir(const fs::path &path,
     if (args.size() <= 2)
         create_dir(path, args[1]);
     else
-        for (auto f : args | std::ranges::views::drop(1))
+        for (const std::string& f : args | std::ranges::views::drop(1))
             create_dir(path, f);
 }
 

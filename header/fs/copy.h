@@ -11,8 +11,12 @@
 namespace copy {
     void copy_file(const fs::path& from, const fs::path& to,
         const std::string& parameter);
+    void copy_all_files(const fs::path& from, const fs::path& to);
+
     void copy_folder(const fs::path& from, const fs::path& to,
         const std::string& parameter);
+    void copy_all_folders(const fs::path& from, const fs::path& to);
+
     void copy_folder_or_file(const fs::path& from, const fs::path& to,
         const std::string& parameter);
 

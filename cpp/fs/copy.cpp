@@ -39,11 +39,6 @@ void copy::copy_folder_or_file(const fs::path& source, const fs::path& target,
 
      try {
           check_parameter_in_copy(parameter, source, target);
-
-          if (fs::is_regular_file(source))
-               copy_file(source, target, parameter);
-          else
-               copy_folder(source, target, parameter);
      }
      catch (const fs::filesystem_error& fserr) {
           if (fserr.code() == std::errc::file_exists) {
@@ -63,14 +58,19 @@ void check_parameter_in_copy(const std::string &parameter,
      const fs::path &source, const fs::path &target) {
 
      if (parameter == "-af" || parameter == "--all-files")
-          copy::copy_file(source, target, parameter);
+          copy::copy_all_files(source, target);
+
      else if (parameter == "-ad" || parameter == "--all-directory")
           copy::copy_folder(source, target, parameter);
+     else if (parameter == "-a" || parameter == "--all") {
+          copy::copy_all_files(source, target);
+          copy::copy_all_folders(source, target);
+     }
      else {
-          for (const fs::directory_entry& entry : fs::directory_iterator(source)) {
-               fs::copy(entry.path(), target);
-          }
-          print_success("success copied all", source, target);
+          if (fs::is_regular_file(source))
+               copy::copy_file(source, target, parameter);
+          else
+               copy::copy_folder(source, target, parameter);
      }
 
 }
@@ -103,19 +103,27 @@ void copy::copy_file(const fs::path& from, const fs::path& to,
           fs::copy(source, target, fs::copy_options::overwrite_existing);
           print_success("success overwritten", source, target);
      }
-     else if (parameter == "-af" || parameter == "--all-files") {
-          for (const fs::directory_entry& entry : fs::directory_iterator(source)) {
-               if (entry.is_regular_file()) {
-                    fs::copy(entry.path(), target);
-               }
-          }
-          print_success("success copied all file(s)", source, target);
-     }
      else {
           fs::copy(source, target, fs::copy_options::overwrite_existing);
           print_success("success copied file", source, target);
      }
+}
 
+void copy::copy_all_files(const fs::path& from, const fs::path& to) {
+     try {
+
+          for (const auto& entry : fs::directory_iterator(from)) {
+               fs::path dest = to / entry.path().filename();
+
+               if (entry.is_regular_file()) {
+                    fs::copy_file(entry.path(), dest, fs::copy_options::overwrite_existing);
+                    print_success("copied success", from, entry.path().filename());
+               }
+          }
+          print_success("all files copied", from, to);
+     } catch (const std::exception& e) {
+          print_error_exception("error copying file",e, true);
+     }
 }
 
 
@@ -143,17 +151,26 @@ void copy::copy_folder(const fs::path& from, const fs::path& to,
                fs::copy_options::recursive);
           print_success("success overwritten", source, target);
      }
-     else if (parameter == "-ad" || parameter == "--all-directory") {
-          for (const fs::directory_entry& entry : fs::directory_iterator(source)) {
-               if (entry.is_directory()) {
-                    fs::copy(entry.path(), target);
-                    print_success("success copied all directory", source, target);
-               }
-          }
-     }
      else {
           fs::copy(source, target, fs::copy_options::recursive);
           print_success("success copied folder", source, target);
+     }
+}
+
+void copy::copy_all_folders(const fs::path &from, const fs::path &to) {
+     try {
+          for (const auto& entry : fs::directory_iterator(from)) {
+               fs::path dest = to / entry.path().filename();
+
+               if (entry.is_directory()) {
+                    fs::copy(entry.path(), to, fs::copy_options::overwrite_existing);
+                    print_success("copied success", from, entry.path().filename());
+               }
+          }
+          print_success("all folders copied", from, to);
+
+     } catch (const std::exception& e) {
+        print_error_exception("error copying folder", e, true);
      }
 }
 
@@ -162,6 +179,7 @@ void copy::copy_folder(const fs::path& from, const fs::path& to,
 // copying without log
 //=======================
 void copy::copy_only_for_func_move(const fs::path& from, const fs::path& to) {
+
      const fs::path path_ff = path_ff::get_path();
 
      fs::path from_path_for_copy = HFILEF::get_fetch_full_path(from, path_ff);
@@ -172,7 +190,7 @@ void copy::copy_only_for_func_move(const fs::path& from, const fs::path& to) {
      }
 
      if (fs::is_symlink(from_path_for_copy)) {
-          print_warning("[WARNING] cannot overwrite symlink!");
+          print_warning("cannot overwrite symlink!");
           fs::copy_symlink(from_path_for_copy, to_path_for_copy);
           return;
      }

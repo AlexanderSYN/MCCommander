@@ -207,6 +207,7 @@ void FILEO::command_list(const fs::path& path_f) {
             return;
         }
 
+
         for (const auto& entry : fs::directory_iterator(path_f)) {
             count++;
             std::println("{}) {}", count, entry.path().filename().string());
