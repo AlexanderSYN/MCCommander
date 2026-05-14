@@ -46,5 +46,7 @@ add_executable(SimpleMiniCommander main.cpp
         cpp/fs/MOVE.cpp
         header/helper/helper_echo.h
         cpp/helper/helper_echo.cpp
+        cpp/json/JSON.cpp
+        header/json/JSON.h
 )
 target_link_libraries(SimpleMiniCommander PRIVATE stdc++exp)

@@ -26,6 +26,11 @@
 #include "header/text/io_text.h"
 
 //======================
+// JSON
+//======================
+#include "header/json/JSON.h"
+
+//======================
 // console
 //======================
 #include "header/console/cmd.h"
@@ -96,9 +101,19 @@ int main() {
 
     commands["info"] = [&](const std::vector<std::string>&) {
         std::println("___Simple Mini Commander___");
-        std::println("___Author:  AlexanderSYN___");
-        std::println("______Beta Test V0.03______");
+        std::println("___Author: Alexander Katin___");
+        std::println("_____Git-Hub: Syneation______");
+        std::println("____Git-Hub: AlexanderSYN____");
+        std::println("______Beta Test V0.05______");
     };
+    commands["mkcommand"] = [&](const std::vector<std::string>& args) {
+        if (args.size() < 2) {
+            std::println("[HINT] you need write like so; mkcommand (name) (action)");
+            return;
+        }
+        JSON::save_command(args[1], args[2]);
+    };
+    commands["mkcmd"] = commands["mkcomman"];
 
     //================
     //time and date
