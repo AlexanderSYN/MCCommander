@@ -104,19 +104,11 @@ int main() {
         std::println("___Author: Alexander Katin___");
         std::println("_____Git-Hub: Syneation______");
         std::println("____Git-Hub: AlexanderSYN____");
-        std::println("______Beta Test V0.05______");
+        std::println("_______Beta Test V0.05_______");
     };
-    commands["mkcommand"] = [&](const std::vector<std::string>& args) {
-        if (args.size() < 2) {
-            std::println("[HINT] you need write like so; mkcommand (name) (action)");
-            return;
-        }
-        JSON::save_command(args[1], args[2]);
-    };
-    commands["mkcmd"] = commands["mkcomman"];
 
     //================
-    //time and date
+    // time and date
     //================
     commands["time"] = [&](const std::vector<std::string>&) {
         println("{}", date::local_time());
@@ -213,6 +205,18 @@ int main() {
         isRun = false;
     };
     commands["ex"] = commands["exit"];
+
+    //=======================
+    // JSON
+    //=======================
+    commands["mkcommand"] = [&](const std::vector<std::string>& args) {
+        if (args.size() < 2) {
+            std::println("[HINT] you need write like so; mkcommand (name) (action)");
+            return;
+        }
+        JSON::save_command(args[1], args[2]);
+    };
+    commands["mkcmd"] = commands["mkcomman"];
 
 
     //=================
