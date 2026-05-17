@@ -73,6 +73,7 @@ int main() {
     // history all
     std::vector<std::string> history {};
     std::vector<std::string> hist_search {}; // history of found files
+    std::string lastListedPath;
 
     std::string user_input;
 
@@ -267,8 +268,13 @@ int main() {
             std::println("{}", path_ff::get_OPath());
 
         else if (args.size() == 2) {
-            FILEO::set_path_in_cd(args[1], path_ff::get_OPath(),
-                path_ff::get_path());
+
+            if (args[1] == "!$") {
+                FILEO::set_path_in_cd(lastListedPath);
+                return;
+            }
+
+            FILEO::set_path_in_cd(args[1]);
         }
 
         else {
@@ -279,9 +285,7 @@ int main() {
             }
 
             FILEO::set_path_in_cd(
-                helper::connect_path_with_spaces_str(args),
-                path_ff::get_OPath(),
-                path_ff::get_path());
+                helper::connect_path_with_spaces_str(args));
         }
     };
     commands["pwd"] = [&](const std::vector<std::string>&) {
@@ -361,7 +365,10 @@ int main() {
     };
 
     commands["open"] = [&](const std::vector<std::string>& args) {
-        FILEO::command_open();
+        if (args.size() <= 1)
+            FILEO::command_open();
+        else
+            FILEO::command_open(args[1]);
     };
     commands["dir"] = [&](const std::vector<std::string>&) {
         FILEO::command_dir_windows();
@@ -372,6 +379,9 @@ int main() {
         else {
             fs::path tmp_path = helper::connect_path(path_ff::get_path(),
                 args[1]);
+
+            lastListedPath = args[1];
+
             if (fs::exists(tmp_path))
                 FILEO::command_list(tmp_path);
             else

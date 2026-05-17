@@ -18,8 +18,10 @@ void print_directory_entry(std::chrono::system_clock::time_point sctp,
 //======================
 // command -> cd (path)
 //======================
-void FILEO::set_path_in_cd(std::string path_by_user,
-        std::string OPath, fs::path path) {
+void FILEO::set_path_in_cd(std::string path_by_user) {
+
+    fs::path path = path_ff::get_path();
+    std::string OPath = path_ff::get_OPath();
 
     std::string tmp_path; // for split path
     std::string path_from_user = path_by_user;
@@ -157,7 +159,48 @@ void FILEO::command_open() {
         std::println(std::cerr, "[CRITICAL_ERROR_OPEN] {}", e.what());
     }
 }
+void FILEO::command_open(const fs::path& path_ff) {
+    try {
+        fs::path path = path_ff;
 
+        int count_files = 0;
+        int count_folders = 0;
+
+        if (!fs::exists(path)) {
+            path = path_ff::get_path() / path;
+            if (!fs::exists(path))
+                std::println(std::cerr, "[ERROR_OPEN] Folder doesn't exist!");
+        }
+
+        std::println("Disk: {}", path.string().at(0));
+
+        for (const fs::directory_entry& entry: fs::directory_iterator(path)) {
+            try {
+                auto ftime = std::filesystem::last_write_time(entry.path());
+                auto sctp = std::chrono::clock_cast<std::chrono::system_clock>(ftime);
+
+                // example output: 12.04.2026 22:05 123mb [FILE/DIR] name file / folder
+                if (fs::is_regular_file(entry.path())) {
+                    output_for_command_open(entry, sctp, false);
+                    ++count_files;
+                }
+                if (fs::is_directory(entry.path())) {
+                    output_for_command_open(entry, sctp, true);
+                    ++count_folders;
+                }
+            } catch (const std::exception &e) {
+                std::println(std::cerr, "[CRITICAL_ERROR_OPEN] {}", e.what());
+            }
+
+        }
+
+        std::println("\t\t File(s): {}\n \t\t Dir(s): {}", count_files, count_folders);
+
+    }
+    catch (const std::exception& e) {
+        std::println(std::cerr, "[CRITICAL_ERROR_OPEN] {}", e.what());
+    }
+}
 
 
 void FILEO::output_for_command_open(

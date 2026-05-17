@@ -14,8 +14,7 @@
 //=====================
 
 namespace FILEO {
-    void set_path_in_cd(std::string path_by_user,
-        std::string OPath, fs::path path);
+    void set_path_in_cd(std::string path_by_user);
     void choice_place_path_in_cd(int place);
 
     void command_dir_windows();
@@ -24,6 +23,7 @@ namespace FILEO {
                                 const std::chrono::system_clock::time_point& sctp,
                                 bool isDirectory);
     void command_open();
+    void command_open(const fs::path& path_ff);
 
     void command_list();
     void command_list(const fs::path& path_f);
