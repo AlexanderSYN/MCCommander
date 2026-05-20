@@ -1,10 +1,18 @@
 [
     {
         "action": "123",
-        "name": "gg"
+        "command": "gg"
     },
     {
         "action": "321",
-        "name": "tt"
+        "command": "tt"
+    },
+    {
+        "action": "help",
+        "command": "test-command"
+    },
+    {
+        "action": "touch t.txt ",
+        "command": "t"
     }
 ]

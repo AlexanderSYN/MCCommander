@@ -25,6 +25,8 @@ namespace helper {
     fs::path resolve_existing_path(const fs::path& base_path,
                             const fs::path& input_path);
 
+    std::string before_spacing(std::string text);
+
     void clear_input_buffer();
 }
 

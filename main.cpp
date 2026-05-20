@@ -49,6 +49,7 @@
 #include "header/helper/helper.h"
 #include "header/helper/helper_echo.h"
 #include "header/helper/path_ff.h"
+#include "header/helper/Output.hpp"
 
 namespace fs = std::filesystem;
 
@@ -212,12 +213,45 @@ int main() {
     //=======================
     commands["mkcommand"] = [&](const std::vector<std::string>& args) {
         if (args.size() < 2) {
-            std::println("[HINT] you need write like so; mkcommand (name) (action)");
+            O::phint("you need write like so: mkcommand (name) (action)");
             return;
         }
-        JSON::save_command(args[1], args[2]);
+        JSON::save_command(args[1], args);
     };
-    commands["mkcmd"] = commands["mkcomman"];
+    commands["mkcmd"] = commands["mkcommand"];
+
+
+    commands["my-commands"] = [&](const std::vector<std::string>) {
+        JSON::print_all_commands();
+    };
+    commands["mycmd"] = commands["my-commands"];
+
+    commands["run-command"] = [&](const std::vector<std::string>& args) {
+        if (args.size() > 2) {
+            O::phint("You need to write like this: run-command (command)");
+            return;
+        }
+
+        std::string action = JSON::get_action(args[1]);
+
+        std::vector<std::string> sub_args;
+        std::string token;
+        std::istringstream iss(action);
+
+        while (iss >> token)
+            sub_args.push_back(token);
+
+        if (sub_args.empty()) return;
+
+        std::string cmd_name = sub_args[0];
+        if (commands.contains(cmd_name)) {
+            commands[cmd_name](sub_args);
+        } else {
+            O::perror("Internal command '{}' from JSON action is unknown!");
+        }
+    };
+    commands["rc"] = commands["run-command"];
+    commands["rn"] = commands["run-command"];
 
 
     //=================
@@ -411,7 +445,7 @@ int main() {
     // create file or folder
     //========================
     commands["touch"] = [&](const std::vector<std::string>& args) {
-      if (args.empty()) {
+      if (args.size() > 2) {
           std::println(std::cerr, "[HINT] You need to write so: touch (name file).(extension)");
           return;
       }

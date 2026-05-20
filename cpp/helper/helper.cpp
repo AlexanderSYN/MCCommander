@@ -59,6 +59,15 @@ fs::path helper::resolve_existing_path(const fs::path &base_path, const fs::path
     return fs::exists(input_path) ? input_path : base_path / input_path;
 }
 
+std::string helper::before_spacing(std::string text) {
+    size_t found = text.find(' ');
+
+    if (found != std::string::npos) {
+        return text.substr(0, found);
+    }
+
+    return "";
+}
 
 void helper::clear_input_buffer() {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear buffer
