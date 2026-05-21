@@ -4,15 +4,11 @@
         "command": "gg"
     },
     {
-        "action": "321",
-        "command": "tt"
-    },
-    {
         "action": "help",
         "command": "test-command"
     },
     {
-        "action": "touch t.txt ",
-        "command": "t"
+        "action": "mycmd ",
+        "command": "md"
     }
 ]

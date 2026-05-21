@@ -20,7 +20,8 @@ namespace JSON {
 
     void save_command(const std::string& cmd, const std::vector<std::string> act);
     std::string get_action(const std::string& command);
-    void find_commands(const std::string& command);
+    bool change_command(const std::string& command);
+    bool delete_command(const std::string& command);
     void print_all_commands();
 }
 

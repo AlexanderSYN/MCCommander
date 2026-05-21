@@ -49,7 +49,7 @@
 #include "header/helper/helper.h"
 #include "header/helper/helper_echo.h"
 #include "header/helper/path_ff.h"
-#include "header/helper/Output.hpp"
+#include "header/helper/IO.hpp"
 
 namespace fs = std::filesystem;
 
@@ -213,7 +213,7 @@ int main() {
     //=======================
     commands["mkcommand"] = [&](const std::vector<std::string>& args) {
         if (args.size() < 2) {
-            O::phint("you need write like so: mkcommand (name) (action)");
+            IO::phint("you need write like so: mkcommand (name) (action)");
             return;
         }
         JSON::save_command(args[1], args);
@@ -226,9 +226,24 @@ int main() {
     };
     commands["mycmd"] = commands["my-commands"];
 
+    commands["del-command"] = [&](const std::vector<std::string>& args) {
+        if (args.size() > 2) {
+            IO::phint("you need to write like so: del-command (what command)");
+            return;
+        }
+
+        if (JSON::delete_command(args[1])) {
+            IO::psuccess("command successfully deleted!");
+            return;
+        }
+
+        IO::perror("command is not deleted!");
+    };
+    commands["delcmd"] = commands["del-command"];
+
     commands["run-command"] = [&](const std::vector<std::string>& args) {
         if (args.size() > 2) {
-            O::phint("You need to write like this: run-command (command)");
+            IO::phint("You need to write like this: run-command (command)");
             return;
         }
 
@@ -247,9 +262,10 @@ int main() {
         if (commands.contains(cmd_name)) {
             commands[cmd_name](sub_args);
         } else {
-            O::perror("Internal command '{}' from JSON action is unknown!");
+            IO::perror("Internal command '{}' from JSON action is unknown!");
         }
     };
+    commands["rnc"] = commands["run-command"];
     commands["rc"] = commands["run-command"];
     commands["rn"] = commands["run-command"];
 

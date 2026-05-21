@@ -7,10 +7,8 @@
 
 #include "include_helper.h"
 
-//================
-// O - Output
-//================
-namespace O {
+
+namespace IO {
     //====================
     // SUCCESS
     //====================
