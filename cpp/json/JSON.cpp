@@ -17,20 +17,7 @@ void JSON::save_command(const std::string& cmd, const std::vector<std::string> a
         action += tmp += " ";
     }
 
-    std::ifstream input_file(FILE_PATH);
-    if (input_file.is_open()) {
-        try {
-            input_file >> root_node;
-        }
-        catch (const json::parse_error& err_parse) {
-            // if the file is empty or corrupted, created empty array
-            root_node = json::array();
-        }
-    }
-    else {
-        // If there is no file, initialize it as an empty array
-        root_node = json::array();
-    }
+    get_all_command(root_node);
 
     if (!root_node.is_array())
         root_node = json::array();
@@ -41,26 +28,18 @@ void JSON::save_command(const std::string& cmd, const std::vector<std::string> a
 
     root_node.push_back(new_command);
 
-    std::ofstream output_file(FILE_PATH);
-    if (output_file.is_open()) {
-        output_file << root_node.dump(4);
-        output_file.close();
+    if (write_in_json(root_node))
         std::println("[SYSTEM] Command: {} successfully saved!", cmd);
-    }
-    else {
+    else
         IO::perror("Failed to saved command in commands.json");
-    }
+
 }
 
 bool JSON::delete_command(const std::string &command) {
     if (!check_exists_json()) return false;
 
     json root_node;
-    {
-        std::ifstream file(FILE_PATH);
-        if (!file .is_open()) return false;
-        file >> root_node;
-    }
+    get_all_command(root_node);
 
     if (!root_node.is_array()) return false;
 
@@ -68,13 +47,70 @@ bool JSON::delete_command(const std::string &command) {
         if (it->value("command", "none") == command) {
             root_node.erase(it);
             if (write_in_json(root_node)) return true;
-            return false;
         }
     }
+
+    return false;
 }
 
-bool write_in_json(const json& root_node) {
-    std::ofstream out_file(JSON::FILE_PATH);
+bool JSON::change_command(const std::string &old_command, const std::string& new_command) {
+    if (!check_exists_json()) return false;
+
+    json root_node;
+    get_all_command(root_node);
+
+    if (!root_node.is_array()) return false;
+
+    bool was_changed = false;
+
+    for (auto& item : root_node) {
+        if (item.is_object() && item.contains("command")
+            && item["command"] == old_command) {
+            item["command"] = new_command;
+            was_changed = true;
+        }
+    }
+    if (was_changed) {
+        write_in_json(root_node);
+        return true;
+    }
+    return false;
+}
+
+bool JSON::change_action(const std::string &command, const std::vector<std::string>& new_action) {
+    if (!check_exists_json()) return false;
+
+    json root_node;
+    get_all_command(root_node);
+
+    std::string action = "";
+
+    for (std::string tmp : new_action | std::views::drop(2)) {
+        action += tmp += " ";
+    }
+
+    if (!root_node.is_array()) return false;
+
+    bool was_change = false;
+
+    for (auto& item : root_node) {
+        if (item.is_object() && item.contains("command")
+            && item.contains("action") && item["command"] == command) {
+            item["action"] = action;
+            was_change = true;
+        }
+    }
+
+    if (was_change) {
+        write_in_json(root_node);
+        return true;
+    }
+
+    return false;
+}
+
+bool JSON::write_in_json(const json& root_node) {
+    std::ofstream out_file(FILE_PATH);
 
     if (out_file.is_open()) {
         out_file << root_node.dump(4);
@@ -82,6 +118,14 @@ bool write_in_json(const json& root_node) {
     }
 
     return false;
+}
+
+void JSON::get_all_command(json& root_node) {
+    {
+        std::ifstream file(FILE_PATH);
+        if (!file.is_open()) IO::perror("cannot open json");
+        file >> root_node;
+    }
 }
 
 std::string JSON::get_action(const std::string &command) {

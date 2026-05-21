@@ -88,12 +88,13 @@ int main() {
     // console
     //============
     commands["help"] = [&](const std::vector<std::string>&) {
-        std::print("HELP");
+        std::println("----------------HELPER----------------");
+        std::println();
     };
 
     commands["color"] = [&](const std::vector<std::string>& args) {
         if (args.size() <= 1) {
-            std::println("[HINT] you need to write like this -> color ... <- (color name)");
+            IO::phint("you need to write like this -> color ... <- (color name)");
             return;
         }
 
@@ -106,7 +107,7 @@ int main() {
         std::println("___Author: Alexander Katin___");
         std::println("_____Git-Hub: Syneation______");
         std::println("____Git-Hub: AlexanderSYN____");
-        std::println("_______Beta Test V0.05_______");
+        std::println("_______Beta Test V0.10_______");
     };
 
     //================
@@ -212,7 +213,7 @@ int main() {
     // JSON
     //=======================
     commands["mkcommand"] = [&](const std::vector<std::string>& args) {
-        if (args.size() < 2) {
+        if (args.size() < 3) {
             IO::phint("you need write like so: mkcommand (name) (action)");
             return;
         }
@@ -225,6 +226,21 @@ int main() {
         JSON::print_all_commands();
     };
     commands["mycmd"] = commands["my-commands"];
+
+    commands["change-command"] = [&](const std::vector<std::string>& args) {
+        if (args.size() > 3) {
+            IO::phint("you need to write like so: change-command (old command) (new command)");
+            return;
+        }
+
+        if (JSON::change_command(args[1], args[2])) {
+            IO::psuccess("command successfully changed!");
+            return;
+        }
+
+        IO::perror("command is not changed!");
+    };
+    commands["chcmd"] = commands["change-command"];
 
     commands["del-command"] = [&](const std::vector<std::string>& args) {
         if (args.size() > 2) {
@@ -240,6 +256,21 @@ int main() {
         IO::perror("command is not deleted!");
     };
     commands["delcmd"] = commands["del-command"];
+
+    commands["change-action"] = [&](const std::vector<std::string>& args) {
+        if (args.size() > 3) {
+            IO::phint("you need to write like so: change-action (command) (new action)");
+            return;
+        }
+
+        if (JSON::change_action(args[1], args)) {
+            IO::psuccess("action successfully changed!");
+            return;
+        }
+
+        IO::perror("action is not changed!");
+    };
+    commands["chact"] = commands["change-action"];
 
     commands["run-command"] = [&](const std::vector<std::string>& args) {
         if (args.size() > 2) {
