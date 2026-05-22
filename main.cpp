@@ -88,8 +88,15 @@ int main() {
     // console
     //============
     commands["help"] = [&](const std::vector<std::string>&) {
-        std::println("----------------HELPER----------------");
-        std::println();
+        std::println("----------------------HELPER----------------------");
+        std::println("help -c / --color - for help color");
+        std::println("help -cons / --console - for help console commands");
+        std::println("help -d / --date - for help date");
+        std::println("help -mc / --my-commands - for help your commands");
+        std::println("help -t / --text - for help text");
+        std::println("help -fs / --filesystem - for helpe filesystem");
+        std::println("help --all - for help all");
+        std::println("------------------END-HELPER----------------------");
     };
 
     commands["color"] = [&](const std::vector<std::string>& args) {
