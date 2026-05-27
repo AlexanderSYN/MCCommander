@@ -6,6 +6,7 @@
 #define FILEC_H
 
 #include "include_fs.h"
+#include "../helper/IO.hpp"
 
 //
 // FILEC - File Create
@@ -37,7 +38,7 @@ namespace FILEC {
                 outFile << text;
 
             outFile.close();
-            std::println("[SYSTEM] file created and written successfully!");
+            IO::psuccess("file created and written successfully!");
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear buffer
             return;
         }

@@ -9,74 +9,89 @@
 
 
 namespace IO {
+    namespace detail {
+        inline void log_base(std::ostream& stream, std::string_view prefix,
+            std::string_view text) {
+
+            std::println(stream, "[{}] {}", prefix, text);
+        }
+
+        template <typename ...Args>
+        void log_templated(std::ostream& stream, std::string_view prefix,
+            std::string_view text, Args&&... args) {
+
+            std::print(stream, "[{}] ", prefix);
+
+            if (text.find("{}") != std::string_view::npos) {
+                std::vprint_nonunicode(stream, text, std::make_format_args(args...));
+                std::print(stream, "\n");
+            }
+            else {
+                std::print(stream, "{} ", text);
+                ((std::print(stream, "{} ", std::forward<Args>(args))), ...);
+                std::print(stream, "\n");
+            }
+        }
+    }
+
     //====================
     // SUCCESS
     //====================
-    template <typename T>
-    void psuccess(const T& text) {
-        std::println("[SUCCESS] {}", text);
+    inline void psuccess(std::string_view text) {
+        detail::log_base(std::cout, "SUCCESS", text);
     }
 
-    template <typename T, typename ...Args>
-    void psuccess(const T& text, Args... args) {
-        std::print("[SUCCESS] {} ", text);
-        psuccess(args...);
+    template <typename ...Args>
+    void psuccess(std::string_view text, Args&&... args) {
+        detail::log_templated(std::cout, "SUCCESS", text, std::forward<Args>(args)...);
     }
 
     //====================
     // ERROR
     //====================
-    template <typename T>
-    void perror(const T& text) {
-        std::println("[ERROR] {}", text);
+    inline void perror(std::string_view text) {
+        detail::log_base(std::cerr, "ERROR", text);
     }
 
-    template <typename T, typename ...Args>
-    void perror(const T& text, Args... args) {
-        std::print("[ERROR] {} ", text);
-        psuccess(args...);
+    template <typename ...Args>
+    void perror(std::string_view text, Args&&... args) {
+        detail::log_templated(std::cerr, "ERROR", text, std::forward<Args>(args)...);
     }
 
     //====================
     // WARNING
     //====================
-    template <typename T>
-    void pwarning(const T& text) {
-        std::println("[WARNING] {}", text);
+    inline void pwarning(std::string_view text) {
+        detail::log_base(std::cout, "WARNING", text);
     }
 
-    template <typename T, typename ...Args>
-    void pwarning(const T& text, Args... args) {
-        std::print("[WARNING] {} ", text);
-        psuccess(args...);
+    template <typename ...Args>
+    void pwarning(std::string_view text, Args&&... args) {
+        detail::log_templated(std::cout, "WARNING", text, std::forward<Args>(args)...);
     }
 
     //====================
     // HINT
     //====================
-    template <typename T>
-    void phint(const T& text) {
-        std::println("[HINT] {}", text);
+    inline void phint(std::string_view text) {
+        detail::log_base(std::cout, "HINT", text);
     }
 
-    template <typename T, typename ...Args>
-    void phint(const T& text, Args... args) {
-        std::print("[HINT] {} ", text);
-        psuccess(args...);
+    template <typename ...Args>
+    void phint(std::string_view text, Args&&... args) {
+        detail::log_templated(std::cout, "HINT", text, std::forward<Args>(args)...);
     }
 
     //====================
     // SYSTEM
     //====================
-    template <typename T>
-    void psystem(const T& text) {
-        std::println("[SYSTEM] {}", text);
+    inline void psystem(std::string_view text) {
+        detail::log_base(std::cout, "SYSTEM", text);
     }
 
-    template <typename T, typename ...Args>
-    void psystem(const T& text, Args... args) {
-        std::print("[SYSTEM] {} ", text);
-        psuccess(args...);
+    template <typename ...Args>
+    void psystem(std::string_view text, Args&&... args) {
+        detail::log_templated(std::cout, "SYSTEM", text, std::forward<Args>(args)...);
     }
 }
 

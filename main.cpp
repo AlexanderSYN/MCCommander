@@ -300,7 +300,7 @@ int main() {
         if (commands.contains(cmd_name)) {
             commands[cmd_name](sub_args);
         } else {
-            IO::perror("Internal command '{}' from JSON action is unknown!");
+            IO::perror("Internal command from JSON action is unknown!");
         }
     };
     commands["rnc"] = commands["run-command"];
@@ -434,7 +434,7 @@ int main() {
 
     commands["move"] = [&](const std::vector<std::string>& args) {
         if (args.size() < 2) {
-            std::println("[HINT] incorrectly command, you need to write so: move (source) (target)!");
+            IO::phint("incorrectly command, you need to write so: move (source) (target)!");
             return;
         }
         std::string source ;
