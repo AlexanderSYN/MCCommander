@@ -49,5 +49,7 @@ add_executable(SimpleMiniCommander main.cpp
         cpp/json/JSON.cpp
         header/json/JSON.h
         header/helper/IO.hpp
+        header/console/help.h
+        cpp/console/help.cpp
 )
 target_link_libraries(SimpleMiniCommander PRIVATE stdc++exp)
