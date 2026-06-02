@@ -5,6 +5,9 @@
 #ifndef SIMPLEMINICOMMANDER_FOR_HELP_H
 #define SIMPLEMINICOMMANDER_FOR_HELP_H
 
+#include <iostream>
+#include <print>
+
 namespace help {
     void output_help_color();
     void output_help_console();
