@@ -35,6 +35,7 @@
 //======================
 #include "header/console/cmd.h"
 #include "header/console/color_console.h"
+#include "header/console/help.h"
 
 //======================
 // time and date
@@ -87,16 +88,24 @@ int main() {
     //============
     // console
     //============
-    commands["help"] = [&](const std::vector<std::string>&) {
-        std::println("----------------------HELPER----------------------");
-        std::println("help -c / --color - for help color");
-        std::println("help -cons / --console - for help console commands");
-        std::println("help -d / --date - for help date");
-        std::println("help -mc / --my-commands - for help your commands");
-        std::println("help -t / --text - for help text");
-        std::println("help -fs / --filesystem - for helpe filesystem");
-        std::println("help --all - for help all");
-        std::println("------------------END-HELPER----------------------");
+    commands["help"] = [&](const std::vector<std::string>& args) {
+        if (args.size() <= 1) {
+            std::println("----------------------HELPER----------------------");
+            std::println("help -c / --color - for help color");
+            std::println("help -cons / --console - for help console commands");
+            std::println("help -d / --date - for help date");
+            std::println("help -mc / --my-commands - for help your commands");
+            std::println("help -t / --text - for help text");
+            std::println("help -fs / --filesystem - for helpe filesystem");
+            std::println("help --all - for help all");
+            std::println("------------------END-HELPER----------------------");
+        }
+        else if (args[1] == "--color" || args[1] == "-col" || args[1] == "--colour")
+            help::output_help_color();
+
+        else if (args[1] == "--date" || args[1] == "--time"
+            || args[1] == "-d" || args[1] == "-t")
+            help::output_help_date();
     };
 
     commands["color"] = [&](const std::vector<std::string>& args) {
