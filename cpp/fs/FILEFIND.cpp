@@ -28,7 +28,6 @@ void FILEFIND::find(std::string search_term, std::string parametr,
             //========================================
             // Searching so -> find (filename/folder)
             //========================================
-
             for (const auto &entry: fs::directory_iterator(path_f)) {
                 if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
                     std::println("\nSearch stopped by user!");
@@ -107,7 +106,6 @@ void FILEFIND::find(std::string search_term, std::string parametr,
                                 paths_founded.push_back(entry.path().string());
                                 std::println("{} - Found: {}",
                                     paths_founded, entry.path().string());
-
                             }
                         }
                     }
@@ -160,8 +158,8 @@ void FILEFIND::find(std::string search_term, std::string parametr,
             std::cin >> choice;
             helper::clear_input_buffer();
 
-            choice--;
             if (choice >= 1 && choice < paths_founded.size()) {
+                choice--;
                 explr::reveal_in_explorer(paths_founded, choice);
             }
         }
@@ -189,7 +187,7 @@ void FILEFIND::recurs_search(std::string search_term,
         search_lower.begin(), ::tolower);
 
     const bool only_files = (param == "-gf" || param == "--global-file");
-    const bool only_dirs = (param == "-gd" || param == "-Flobal-directory");
+    const bool only_dirs = (param == "-gd" || param == "-global-directory");
     // search only extension file
     const bool special_search_file_ext = search_term.substr(0, 2) == "*.";
     // search only name file

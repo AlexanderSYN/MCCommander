@@ -7,15 +7,25 @@
 
 #include <iostream>
 #include <print>
+#include <vector>
 
 namespace help {
-    void output_help_color();
-    void output_help_console();
-    void output_help_date();
-    void output_help_my_commands();
-    void output_help_text();
-    void output_help_filesystem();
-    void output_help_all();
+    void check_help(const std::vector<std::string>& args);
+    void cmd();
+    void path();
+    void date();
+    void history();
+    void clear();
+    void color();
+    void my_commands();
+    void open();
+    void fileDir();
+    void text();
+    void ls();
+    void find();
+    void disk();
+    void exit();
+    void all();
 }
 
 #endif //SIMPLEMINICOMMANDER_FOR_HELP_H
