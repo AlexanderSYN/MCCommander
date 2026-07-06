@@ -106,6 +106,9 @@ int main() {
         else if (args[1] == "--date" || args[1] == "--time"
             || args[1] == "-d" || args[1] == "-t")
             help::output_help_date();
+
+        else if (args[1] == "--all")
+            help::output_help_all();
     };
 
     commands["color"] = [&](const std::vector<std::string>& args) {
@@ -119,8 +122,8 @@ int main() {
     commands["col"] = commands["color"];
 
     commands["info"] = [&](const std::vector<std::string>&) {
-        std::println("___Simple Mini Commander___");
-        std::println("___Author: Alexander Katin___");
+        std::println("____Simple Mini Commander____");
+        std::println("_____Author: Alexander K_____");
         std::println("_____Git-Hub: Syneation______");
         std::println("____Git-Hub: AlexanderSYN____");
         std::println("_______Beta Test V0.10_______");
@@ -137,6 +140,9 @@ int main() {
         println("{}", date::local_date_and_time());
     };
 
+    //=================
+    // console
+    //=================
     commands["cmd"] = [&](const std::vector<std::string>& args) {
         if (args.size() == 1 || args[1] == "run") {
             std::println("You just to run the cmd by Windows!");
