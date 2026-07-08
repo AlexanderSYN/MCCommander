@@ -121,12 +121,37 @@ bool JSON::write_in_json(const json& root_node) {
 }
 
 void JSON::get_all_command(json& root_node) {
-    {
-        std::ifstream file(FILE_PATH);
-        if (!file.is_open()) IO::perror("cannot open json");
-        file >> root_node;
+    std::ifstream file(FILE_PATH);
+
+    if (!file.is_open()) {
+        IO::pwarning("json file not found, trying created json");
+        try {
+            root_node = nlohmann::json::object();
+            IO::psuccess("success");
+        } catch (const std::exception& e) {
+            IO::perror("[ERROR]: {}", e.what());
+        }
+        return;
     }
+
+    if (file.peek() == std::ifstream::traits_type::eof()) {
+        IO::perror("json file is empty");
+        root_node = nlohmann::json::object();
+        return;
+    }
+
+    try {
+        file >> root_node;
+    } catch (const nlohmann::json::parse_error& perr) {
+        IO::perror("json parse error: checking file format!");
+        root_node = nlohmann::json::object();
+    }
+
+    file.close();
+
 }
+
+
 
 std::string JSON::get_action(const std::string &command) {
     if (!check_exists_json()) return "";
