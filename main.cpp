@@ -109,6 +109,7 @@ int main() {
         std::println("____Git-Hub: AlexanderSYN____");
         std::println("_________Beta Test V1________");
     };
+    commands["about"] = commands["info"];
 
     //================
     // time and date

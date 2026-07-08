@@ -32,7 +32,8 @@ void help::check_help(const std::vector<std::string>& args) {
     else if (args[1] == "-ph" || args[1] == "--path") help::path();
     else if (args[1] == "-hs" || args[1] == "--history") help::history();
     else if (args[1] == "-cls" || args[1] == "--clear") help::clear();
-    else if (args[1] == "-mc" || args[1] == "--my_commands") help::my_commands();
+    else if (args[1] == "-mc" || args[1] == "--my_commands"
+        || args[1] == "mkcmd" || args[1] == "-mkcmd") help::my_commands();
     else if (args[1] == "-op" || args[1] == "--open") help::open();
     else if (args[1] == "-fd" || args[1] == "--file_dir") help::fileDir();
     else if (args[1] == "-txt" || args[1] == "--text") help::text();
