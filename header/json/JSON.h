@@ -14,8 +14,6 @@ using json = nlohmann::json;
 
 namespace fs = std::filesystem;
 
-inline const fs::path FILE_PATH = "../commands/commands.json";
-
 namespace JSON {
     bool check_exists_json();
 

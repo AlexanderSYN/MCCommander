@@ -8,6 +8,21 @@
 
 bool write_in_json(const json& root_node);
 
+std::string get_absolute_path_json() {
+    wchar_t buffer[MAX_PATH];
+    GetModuleFileNameW(NULL, buffer, MAX_PATH);
+
+    fs::path exe_path(buffer);
+    fs::path project_root = exe_path.parent_path();
+
+    fs::path commands_dir = project_root / "commands";
+
+    if (!fs::exists(commands_dir))
+        fs::create_directory(commands_dir);
+
+    return (commands_dir / "commands.json").string();
+}
+
 void JSON::save_command(const std::string& cmd, const std::vector<std::string> act) {
     json root_node;
 
@@ -110,7 +125,7 @@ bool JSON::change_action(const std::string &command, const std::vector<std::stri
 }
 
 bool JSON::write_in_json(const json& root_node) {
-    std::ofstream out_file(FILE_PATH);
+    std::ofstream out_file(get_absolute_path_json());
 
     if (out_file.is_open()) {
         out_file << root_node.dump(4);
@@ -121,7 +136,7 @@ bool JSON::write_in_json(const json& root_node) {
 }
 
 void JSON::get_all_command(json& root_node) {
-    std::ifstream file(FILE_PATH);
+    std::ifstream file(get_absolute_path_json());
 
     if (!file.is_open()) {
         IO::pwarning("json file not found, trying created json");
@@ -156,7 +171,7 @@ void JSON::get_all_command(json& root_node) {
 std::string JSON::get_action(const std::string &command) {
     if (!check_exists_json()) return "";
 
-    std::ifstream file(FILE_PATH);
+    std::ifstream file(get_absolute_path_json());
     json root_node;
     file >> root_node;
 
@@ -175,7 +190,7 @@ std::string JSON::get_action(const std::string &command) {
 void JSON::print_all_commands() {
     if (!check_exists_json()) return;
 
-    std::ifstream file(FILE_PATH);
+    std::ifstream file(get_absolute_path_json());
     json root_node;
     file >> root_node;
 
@@ -193,7 +208,7 @@ void JSON::print_all_commands() {
 }
 
 bool JSON::check_exists_json() {
-    if (!fs::exists(FILE_PATH)) {
+    if (!fs::exists(get_absolute_path_json())) {
         IO::perror("File is not exists!");
         return false;
     }
