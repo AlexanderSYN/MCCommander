@@ -10,5 +10,9 @@
     {
         "action": "mycmd ",
         "command": "md"
+    },
+    {
+        "action": "dir ",
+        "command": "list"
     }
 ]

@@ -1,4 +1,4 @@
-| <a href="README_ru.md">ру</a> | <a href="README_en.md">en</a> |
+| <a href="README_ru.md">ру</a> | <a href="README.md">en</a> |
 
 # Справка по командам
 
