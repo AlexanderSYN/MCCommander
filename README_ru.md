@@ -546,3 +546,11 @@ ex
 ```text
 help --all
 ```
+
+## Сторонние библиотеки
+
+В этом проекте используется следующее программное обеспечение сторонних производителей:
+
+* **JSON for Modern C++** (v3.12.0) — [GitHub Repository](https://github.com/nlohmann/json)
+    * SPDX-FileCopyrightText: 2013 - 2025 Niels Lohmann <https://nlohmann.me>
+    * SPDX-License-Identifier: MIT

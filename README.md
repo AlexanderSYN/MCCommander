@@ -546,3 +546,11 @@ Display every help topic.
 ```text
 help --all
 ```
+
+## Credits & Third-Party Libraries
+
+This project uses the following third-party software:
+
+* **JSON for Modern C++** (v3.12.0) — [GitHub Repository](https://github.com/nlohmann/json)
+    * SPDX-FileCopyrightText: 2013 - 2025 Niels Lohmann <https://nlohmann.me>
+    * SPDX-License-Identifier: MIT
