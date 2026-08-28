@@ -18,7 +18,7 @@ void print_directory_entry(std::chrono::system_clock::time_point sctp,
 //======================
 // command -> cd (path)
 //======================
-void FILEO::set_path_in_cd(std::string path_by_user) {
+void FILEO::set_path_in_cd(const std::string& path_by_user) {
 
     fs::path path = path_ff::get_path();
     std::string OPath = path_ff::get_OPath();
@@ -59,15 +59,13 @@ void FILEO::set_path_in_cd(std::string path_by_user) {
         std::println(std::cerr, "[ERROR_CD] Folder or File not found!");
         return;
     }
-
-    // changing '/' -> '\'
-    std::replace(path_from_user.begin(), path_from_user.end(),
-        '/', '\\');
-    // changin '\\\' or '\\\\' to '\\'
-    helper::replace_chars(path_from_user,
-        "\\\\", "\\");
-
-    path_ff::set_path(path_from_user);
+    // check again with case-insensitive
+    try {
+        fs::path real_path = fs::canonical(path_from_user);
+        path_ff::set_path(real_path.string());
+    } catch (const fs::filesystem_error& fs_e) {
+        std::println(std::cerr, "[ERROR_CD] {}", fs_e.what());
+    }
 }
 
 void choice_path(int place) {

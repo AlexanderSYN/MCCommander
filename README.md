@@ -318,6 +318,18 @@ mkdir Projects
 
 ---
 
+## Rename
+
+```text
+ren <old_name> <new_name>
+rename <old_name> <new_name>
+```
+
+Rename a file or directory.
+You can also specify full paths
+
+---
+
 ## Delete
 
 ```text

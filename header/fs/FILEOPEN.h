@@ -14,7 +14,7 @@
 //=====================
 
 namespace FILEO {
-    void set_path_in_cd(std::string path_by_user);
+    void set_path_in_cd(const std::string& path_by_user);
     void choice_place_path_in_cd(int place);
 
     void command_dir_windows();

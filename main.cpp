@@ -19,6 +19,7 @@
 #include "header/fs/FILEFIND.h"
 #include "header/fs/EXPLORER.h"
 #include "header/fs/DISK.h"
+#include "header/fs/Rename.h"
 
 //======================
 // text
@@ -393,6 +394,9 @@ int main() {
     commands["explr"] = commands["explorer"];
     commands["openf"] = commands["explorer"];
 
+    //========================
+    // File
+    //========================
     commands["run"] = [&](const std::vector<std::string>& args) {
         if (args.size() <= 1)
             explr::run_file(path_ff::get_path());
@@ -448,6 +452,15 @@ int main() {
 
         MOVE::move_item(source, target);
     };
+
+    commands["rename"] = [&](const std::vector<std::string>& args) {
+        std::string source = args[1];
+        std::string target = args[2];
+
+        Rename::ren(source, target);
+    };
+    commands["ren"] = commands["rename"];
+    commands["rn"] = commands["rename"];
 
     commands["open"] = [&](const std::vector<std::string>& args) {
         if (args.size() <= 1)

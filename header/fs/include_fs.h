@@ -2,8 +2,7 @@
 // Created by AlexamderSYN on 26.03.2026.
 //
 
-#ifndef INCLUDE_H
-#define INCLUDE_H
+#pragma once
 
 #include <iostream>
 #include <print>
@@ -20,4 +19,3 @@
 
 namespace fs = std::filesystem;
 
-#endif //INCLUDE_H

@@ -152,6 +152,7 @@ void help::fileDir() {
     std::println("File | Folder:");
     std::println("touch (name file).(extension) ... - create file in current path");
     std::println("mkdir name_dir ... - create folder in current path");
+    std::println("ren | rename [old_name] [new_name] - rename file or directory");
     std::println("del | delete | remove | rmv name ... - delete files or directories");
     std::println("copy | cp [source] [target] - copy from source path to target path");
     std::println("or just: D:\\test>>cp [target] - source path use from current path");

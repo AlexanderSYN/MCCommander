@@ -52,5 +52,7 @@ add_executable(SimpleMiniCommander main.cpp
         header/helper/IO.hpp
         header/console/help.h
         cpp/console/help.cpp
+        header/fs/rename.h
+        cpp/fs/rename.cpp
 )
 target_link_libraries(SimpleMiniCommander PRIVATE stdc++exp)
