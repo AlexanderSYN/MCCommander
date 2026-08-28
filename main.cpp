@@ -454,6 +454,12 @@ int main() {
     };
 
     commands["rename"] = [&](const std::vector<std::string>& args) {
+        if (args.size() < 3) {
+            std::print("[SYSTEM] [HINT] You need to write so: rename [old_name] [new_name]");
+            std::print("[SYSTEM] [HINT] ren [old_name] [new_name]\n");
+            return;
+        }
+
         std::string source = args[1];
         std::string target = args[2];
 
